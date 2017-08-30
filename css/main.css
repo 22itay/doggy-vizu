@@ -15,3 +15,14 @@ body {
 .custom-tabs {
     height: 960px;
 }
+.node{
+fill: #ccc;
+stroke: #ffffff;
+stroke-width: 2px;
+}
+
+.link{
+    stroke: #539552;
+    stroke-width: 2px;
+
+}
