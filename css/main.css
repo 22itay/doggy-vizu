@@ -35,12 +35,19 @@ body {
 }
 
 .node{
-fill: #ccc;
-stroke: #ffffff;
-stroke-width: 2px;
+    cursor: pointer;
+    fill: #ccc;
+    stroke: #ffffff;
+    stroke-width: 2px;
 }
 
 .link{
+    fill: none;
     stroke: #539552;
     stroke-width: 2px;
+
 }
+
+.node.fixed {
+    fill: #f00;
+  }
