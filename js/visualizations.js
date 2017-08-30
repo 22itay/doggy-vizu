@@ -23,6 +23,7 @@ function visualizeTests(tests, results, summed) {
     let counter = 0;
     let getY = () => 45 * counter++;
 
+    /*
     let allGs = vis2.selectAll("g")
         .data(summed)
         .enter()
@@ -37,7 +38,7 @@ function visualizeTests(tests, results, summed) {
         .attr("y", "20")
         .text(function (d) {
             return `${d.key}: ${Object.keys(d.values)}`
-        });
+        });*/
 }
 
 function analyzeDogs(err, data) {
@@ -50,13 +51,21 @@ function analyzeDogs(err, data) {
         dogEntry["Age at Training"] = +dogEntry["Age at Training"];
         dogEntry.Birthday = toDate(dogEntry.Birthday);
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
+        dogEntry.children = [];
         dogTable[dogEntry.ID] = dogEntry;
+    });
+
+    data.forEach(function (dogEntry) {
+        if (dogTable[dogEntry.FatherID])
+            dogTable[dogEntry.FatherID].children.push(dogEntry);
+
+        if (dogTable[dogEntry.MotherID])
+            dogTable[dogEntry.MotherID].children.push(dogEntry);
     });
 
     loadedData["dogs"] = data;
 
     buildParsets(["Passed", "Breed & Color Code", "Gender"]);
-    buildParsets(["Passed", "Breed & Color Code"]);
 }
 
 function analyzeTests(error, subtests_descs, subtests_results) {
@@ -90,10 +99,13 @@ function analyzeTests(error, subtests_descs, subtests_results) {
 }
 
 function buildParsets(categories) {
-    chart2 = d3.parsets().dimensions(categories);
-    console.log(chart2)
+    // recreate chart
+    let sorted = Array.from(categories).sort();
+    chart2 = d3.parsets().dimensions(sorted).width(800);
+
+    // remove old svg
     vis1.selectAll("svg").remove();
-    svg1 = vis1.append("svg")
+    let svg1 = vis1.append("svg")
         .attr("width", chart2.width())
         .attr("height", chart2.height());
 
@@ -105,15 +117,3 @@ function buildParsets(categories) {
 statuses = ["guiding"];
 
 vis1 = d3.select("#vis1");
-
-vis2 = d3.select("#vis2")
-    .append("svg")
-    .attr("width", chart.width())
-    .attr("height", chart.height())
-    .call(d3.behavior.zoom()
-        .on("zoom", function () {
-            let translate = d3.event.translate;
-            translate[0] = 0;
-            vis2.attr("transform", "translate(" + translate + ") scale(" + d3.event.scale + ")")
-        }))
-    .append("g");;

@@ -22,62 +22,61 @@
             aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
-        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Dogs <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Tests</a>
-                </li>
-
-            </ul>
-        </div>
     </nav>
     <!-- /nav -->
 
     <div class="container custom-tabs">
         <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-expanded="true">
-                    Parallel Sets
+                <a class="nav-link active" id="parsets-tab" data-toggle="tab" href="#parsets" role="tab" aria-controls="parsets" aria-expanded="true">
+                    Dog Data Overview
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile">
+                <a class="nav-link" id="famtree-tab" data-toggle="tab" href="#famtree" role="tab" aria-controls="famtree">
                     Family Tree
                 </a>
             </li>
         </ul>
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <h2>Parallel Sets</h2>
-                This chart allows for ...
-                <div id="vis1" class="mx-auto">
-                </div>
 
-                <div class="row justify-content-center">
-                    <div class="btn-group" id="parsets-toggle">
-                        <button type="button" class="btn btn-outline-primary active" data-toggle="button" data-toggleid="Gender" aria-pressed="true"
-                            autocomplete="off">Gender</button>
-                        <button type="button" class="btn btn-outline-primary active" data-toggle="button" data-toggleid="Breed & Color Code" aria-pressed="true"
-                            autocomplete="off">Breed & Color Code</button>
-                        <button type="button" class="btn btn-outline-primary active" data-toggle="button" data-toggleid="Passed" aria-pressed="true"
-                            autocomplete="off">Passed</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-toggleid="Age at Training" aria-pressed="false"
-                            autocomplete="off">Status</button>
-                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-toggleid="Age at Training" aria-pressed="false"
-                            autocomplete="off">Age at Training</button>
+        <main class="tab-content" id="myTabContent">
+            <section class="tab-pane fade show active" id="parsets" role="tabpanel" aria-labelledby="parsets-tab">
+                <div class="row">
+                    <div class="col-9">
+                        <div id="vis1">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <ul class="list-group" id="parsets-toggles">
+                            <li class="list-group-item">
+                                <label><input type="checkbox" autocomplete="off"> Age at Training</label>
+                            </li>
+                            <li class="list-group-item form-check">
+                                <label><input type="checkbox" autocomplete="off" checked> Breed & Color Code</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox" autocomplete="off" checked> Gender</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox" autocomplete="off" checked> Passed</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox" autocomplete="off"> Secondary Status</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox" autocomplete="off"> Status</label>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
+            </section>
             <!-- /parsets -->
-            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+            <section class="tab-pane fade" id="famtree" role="tabpanel" aria-labelledby="famtree-tab">
                 This is family tree
-            </div>
+            </section>
             <!-- /famtree -->
-        </div>
+        </main>
     </div>
     <!-- /.container -->
 
