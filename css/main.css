@@ -26,3 +26,7 @@ stroke-width: 2px;
     stroke-width: 2px;
 
 }
+
+.node.fixed {
+    fill: #f00;
+  }
