@@ -19,3 +19,8 @@ $("#parsets-toggles input").click(function (event) {
     // re-render
     buildParsets(parsetsLabels);
 })
+
+document.getElementById("tests-searchbox").addEventListener("input", function (e) {
+    console.log(e.target.value);
+    visualizeTests(e.target.value);
+})

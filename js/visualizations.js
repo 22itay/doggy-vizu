@@ -8,25 +8,6 @@ function toDate(dateStr, delimeter = '/') {
     return new Date(+year, +month - 1, +day, 0, 0, 0, 0);
 }
 
-function visualizeTests(tests, results, summed) {
-    /*
-    let allGs = vis2.selectAll("g")
-        .data(summed)
-        .enter()
-        .append("g")
-        .attr("transform", () => "translate(0," + getY() + ")")
-    allGs.append("rect")
-        .attr("height", "40px")
-        .attr("width", "40px")
-        .attr("fill", "blue");
-    allGs.append("text")
-        .attr("x", "50")
-        .attr("y", "20")
-        .text(function (d) {
-            return `${d.key}: ${Object.keys(d.values)}`
-        });*/
-}
-
 function analyzeDogs(err, data) {
     dogTable = {};
 
@@ -78,6 +59,9 @@ function analyzeTests(error, subtests_descs, subtests_results) {
         .key(function (d) { return d.Score; })
         .rollup(function (v) { return v.length; })
         .entries(subtests_results);
+    summarized.forEach(function (entry) {
+        entry.info = subtests[entry.key];
+    })
 
     loadedData["subtests_summed"] = summarized;
 
@@ -116,6 +100,7 @@ d3.queue()
 
 // visual elements definition
 vis1 = d3.select("#vis1");
+vis2 = d3.select("#vis-tests").append("svg").attr("height", 1880);
 
 //// 
 window.addEventListener("dogDataLoaded", function () {
@@ -123,5 +108,33 @@ window.addEventListener("dogDataLoaded", function () {
 });
 
 window.addEventListener("testDataLoaded", function () {
-    visualizeTests(loadedData["subtests"], loadedData["subtest_results"], loadedData["subtests_summed"]);
+    visualizeTests();
 });
+
+
+function visualizeTests(filterStr = "") {
+    counter = 0;
+    getY = () => 40 * counter++;
+
+    vis2.selectAll("g").remove();
+
+    let dataElem = vis2.selectAll("g")
+        .data(loadedData["subtests_summed"].filter(function (d) {
+            return d.info.Description.includes(filterStr);
+        }));
+
+    let allGs = dataElem.enter()
+        .append("g")
+        .attr("transform", () => "translate(0," + getY() + ")");
+
+    allGs.append("text")
+        .attr("x", "0")
+        .attr("y", "20")
+        .text(function (d) {
+            return `${d.info.Description}: ${Object.keys(d.values)}`
+        });
+
+    dataElem.exit()
+        .remove();
+
+}

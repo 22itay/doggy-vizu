@@ -54,22 +54,22 @@
                     <div class="col-3">
                         <ul class="list-group" id="parsets-toggles">
                             <li class="list-group-item">
-                                <label><input type="checkbox" autocomplete="off"> Age at Training</label>
+                                <label><input type="checkbox"> Age at Training</label>
                             </li>
                             <li class="list-group-item form-check">
-                                <label><input type="checkbox" autocomplete="off" checked> Breed & Color Code</label>
+                                <label><input type="checkbox" checked> Breed & Color Code</label>
                             </li>
                             <li class="list-group-item">
-                                <label><input type="checkbox" autocomplete="off" checked> Gender</label>
+                                <label><input type="checkbox" checked> Gender</label>
                             </li>
                             <li class="list-group-item">
-                                <label><input type="checkbox" autocomplete="off" checked> Passed</label>
+                                <label><input type="checkbox" checked> Passed</label>
                             </li>
                             <li class="list-group-item">
-                                <label><input type="checkbox" autocomplete="off"> Secondary Status</label>
+                                <label><input type="checkbox"> Secondary Status</label>
                             </li>
                             <li class="list-group-item">
-                                <label><input type="checkbox" autocomplete="off"> Status</label>
+                                <label><input type="checkbox"> Status</label>
                             </li>
                         </ul>
                     </div>
@@ -83,8 +83,14 @@
             <!-- /famtree -->
 
             <section class="tab-pane fade show active" id="testmain" role="tabpanel" aria-labelledby="testmain-tab">
-                <div class="row"></div>
-                <div class="row"></div>
+                <div class="row" style="margin-top:1em;">
+                    <div class="form-grid col-12">
+                        <input type="search" class="form-control" placeholder="Filter sub-tests here" id="tests-searchbox">
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="vis-tests"></div>
+                </div>
             </section>
             <!-- /famtree -->
         </main>
