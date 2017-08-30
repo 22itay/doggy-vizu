@@ -51,7 +51,16 @@ function analyzeDogs(err, data) {
         dogEntry["Age at Training"] = +dogEntry["Age at Training"];
         dogEntry.Birthday = toDate(dogEntry.Birthday);
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
+        dogEntry.children = [];
         dogTable[dogEntry.ID] = dogEntry;
+    });
+
+    data.forEach(function (dogEntry) {
+        if (dogTable[dogEntry.FatherID])
+            dogTable[dogEntry.FatherID].children.push(dogEntry);
+
+        if (dogTable[dogEntry.MotherID])
+            dogTable[dogEntry.MotherID].children.push(dogEntry);
     });
 
     loadedData["dogs"] = data;
