@@ -1,0 +1,23 @@
+{
+  "name": "doggy-vizu",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/22itay/doggy-vizu.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/22itay/doggy-vizu/issues"
+  },
+  "homepage": "https://github.com/22itay/doggy-vizu#readme",
+  "dependencies": {
+    "d3": "^3.5.17",
+    "d3-queue": "^3.0.7"
+  }
+}
