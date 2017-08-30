@@ -9,7 +9,9 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
         crossorigin="anonymous">
+    <link rel="stylesheet" href="css/d3.parsets.css">
     <link rel="stylesheet" href="css/main.css">
+    <title>Guide Dog Dataset Visualizations</title>
 </head>
 
 <body>
@@ -50,7 +52,25 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                This is parallel sets
+                <h2>Parallel Sets</h2>
+                This chart allows for ...
+                <div id="vis1" class="mx-auto">
+                </div>
+
+                <div class="row justify-content-center">
+                    <div class="btn-group" id="parsets-toggle">
+                        <button type="button" class="btn btn-outline-primary active" data-toggle="button" data-toggleid="Gender" aria-pressed="true"
+                            autocomplete="off">Gender</button>
+                        <button type="button" class="btn btn-outline-primary active" data-toggle="button" data-toggleid="Breed & Color Code" aria-pressed="true"
+                            autocomplete="off">Breed & Color Code</button>
+                        <button type="button" class="btn btn-outline-primary active" data-toggle="button" data-toggleid="Passed" aria-pressed="true"
+                            autocomplete="off">Passed</button>
+                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-toggleid="Age at Training" aria-pressed="false"
+                            autocomplete="off">Status</button>
+                        <button type="button" class="btn btn-outline-primary" data-toggle="button" data-toggleid="Age at Training" aria-pressed="false"
+                            autocomplete="off">Age at Training</button>
+                    </div>
+                </div>
             </div>
             <!-- /parsets -->
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
@@ -69,6 +89,13 @@
         crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
         crossorigin="anonymous"></script>
+
+    <!-- Visualization JS -->
+    <script src="./node_modules/d3/d3.min.js"></script>
+    <script src="./node_modules/d3-queue/build/d3-queue.js"></script>
+    <script src="./js/d3.parsets.js"></script>
+    <script src="./js/visualizations.js"></script>
+    <script src="./js/interactions.js"></script>
 </body>
 
 </html>

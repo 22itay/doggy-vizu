@@ -17,11 +17,11 @@ d3.queue()
     .defer(d3.csv, "/data/subtests.csv")
     .await(analyzeTests);
 
+var loadedData = {};
+
 function visualizeTests(tests, results, summed) {
     let counter = 0;
     let getY = () => 45 * counter++;
-
-    summed.forEach(d => console.log(d.values))
 
     let allGs = vis2.selectAll("g")
         .data(summed)
@@ -53,14 +53,13 @@ function analyzeDogs(err, data) {
         dogTable[dogEntry.ID] = dogEntry;
     });
 
-    console.log(Object.keys(data[0]));
-    vis1.datum(data).call(chart);
+    loadedData["dogs"] = data;
 
+    buildParsets(["Passed", "Breed & Color Code", "Gender"]);
+    buildParsets(["Passed", "Breed & Color Code"]);
 }
 
 function analyzeTests(error, subtests_descs, subtests_results) {
-    console.log(subtests_results);
-
     subtests_results.forEach(function (resultEntry) {
         resultEntry.SubTestID = +resultEntry.SubTestID;
         resultEntry.TestID = +resultEntry.TestID;
@@ -76,24 +75,36 @@ function analyzeTests(error, subtests_descs, subtests_results) {
         subtests[testEntry.ID] = testEntry;
     });
 
+    loadedData["subtest_results"] = subtests_results;
+    loadedData["subtests_descs"] = subtests_descs;
+
     summarized = d3.nest()
         .key(function (d) { return d.SubTestKind; })
         .key(function (d) { return d.Score; })
         .rollup(function (v) { return v.length; })
         .entries(subtests_results);
 
+    loadedData["subtests_summed"] = summarized;
+
     visualizeTests(subtests, subtests_results, summarized);
 }
 
+function buildParsets(categories) {
+    chart2 = d3.parsets().dimensions(categories);
+    console.log(chart2)
+    vis1.selectAll("svg").remove();
+    svg1 = vis1.append("svg")
+        .attr("width", chart2.width())
+        .attr("height", chart2.height());
+
+    svg1.datum(loadedData["dogs"]).call(chart2);
+}
+
+/////
+
 statuses = ["guiding"];
 
-chart = d3.parsets()
-    .dimensions(["Passed", "Breed & Color Code", "Gender"]);
-
-vis1 = d3.select("#vis1")
-    .append("svg")
-    .attr("width", chart.width())
-    .attr("height", chart.height());
+vis1 = d3.select("#vis1");
 
 vis2 = d3.select("#vis2")
     .append("svg")
@@ -103,7 +114,6 @@ vis2 = d3.select("#vis2")
         .on("zoom", function () {
             let translate = d3.event.translate;
             translate[0] = 0;
-            console.log(translate);
             vis2.attr("transform", "translate(" + translate + ") scale(" + d3.event.scale + ")")
         }))
     .append("g");;
