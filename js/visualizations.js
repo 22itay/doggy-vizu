@@ -1,3 +1,8 @@
+if (!window.d3) {
+    window.d3 = require("d3");
+    require("d3-queue");
+}
+
 function toDate(dateStr, delimeter = '/') {
     const [day, month, year] = dateStr.split(delimeter);
     return new Date(+year, +month - 1, +day, 0, 0, 0, 0);
@@ -22,14 +27,14 @@ function visualizeTests(tests, results, summed) {
         .data(summed)
         .enter()
         .append("g")
-        /*.attr("transform", () => "translate(0," + getY() + ")")
-        allGs.append("rect")
-            .attr("height", "40px")
-            .attr("width", "40px")
-            .attr("fill", "blue");
-        allGs.append("text")
-            .attr("x", "50")
-            .attr("y", "20")*/
+        .attr("transform", () => "translate(0," + getY() + ")")
+    allGs.append("rect")
+        .attr("height", "40px")
+        .attr("width", "40px")
+        .attr("fill", "blue");
+    allGs.append("text")
+        .attr("x", "50")
+        .attr("y", "20")
         .text(function (d) {
             return `${d.key}: ${Object.keys(d.values)}`
         });
