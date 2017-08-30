@@ -21,16 +21,26 @@ function analyzeDogs(err, data) {
         dogEntry.children = [];
         dogTable[dogEntry.ID] = dogEntry;
     });
-
+    loadedData["dogs"] = data;
+    
+    var tamp=[];
     data.forEach(function (dogEntry) {
-        if (dogTable[dogEntry.FatherID])
+        if (dogTable[dogEntry.FatherID]){
             dogTable[dogEntry.FatherID].children.push(dogEntry);
+            tamp.push(+dogEntry.ID)
+        }
 
-        if (dogTable[dogEntry.MotherID])
+        if (dogTable[dogEntry.MotherID]){
             dogTable[dogEntry.MotherID].children.push(dogEntry);
+            console.log(dogEntry.ID);
+            tamp.push(+dogEntry.ID)
+        }
     });
 
-    loadedData["dogs"] = data;
+    loadedData["dogsT"]=data.filter(function (dogEntry) {
+        return !tamp.includes(+dogEntry.ID);
+    });
+ 
     window.dispatchEvent(dogDataLoaded);
 }
 

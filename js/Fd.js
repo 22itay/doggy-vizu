@@ -4,7 +4,7 @@ if (!window.d3) {
 }
 
 window.addEventListener("dogDataLoaded", function () {
-    root=loadedData["dogs"];
+    root= loadedData["dogsT"];
     update();
 });
 
@@ -53,9 +53,12 @@ var linksdata = [
     // .charge(-50)
     // .gravity(0.1)
     // .start(); 
-    
+
     var force = d3.layout.force()
     .size([width, height])
+    .linkDistance(40)
+    .charge(-100)
+    .gravity(0.1)
     .on("tick", tick);
 
     var link = svg.selectAll(".link"),
@@ -101,16 +104,21 @@ var linksdata = [
 
       // Returns a list of all nodes under the root.
         function flatten(root) {
+            //console.log("flatten(root):");
             var nodes = [], i = 0;
         
-            console.log(root);
-            function recurse(node) {
-            if (node.children) node.children.forEach(recurse);
-            if (!node.id) node.id = ++i;
+            //console.log(root);
+            root.forEach(function recurse(node, index, array) {
+                // console.log("node");
+                // console.log(node);
+            if (node.children)
+                 node.children.forEach(recurse);
+            if (!node.id)
+                 node.id = ++i;
             nodes.push(node);
-            }
+            });
         
-            recurse(root);
+         
             return nodes;
         }
   
@@ -119,6 +127,8 @@ var linksdata = [
           }
 
           function update() {
+            // console.log("update():");
+            // console.log(root);
             var nodes = flatten(root),
                 links = d3.layout.tree().links(nodes);
           
@@ -153,7 +163,7 @@ var linksdata = [
                 .attr("class", "node")
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; })
-                .attr("r", function(d) { return  10 || 4.5; }) //Math.sqrt(d.size) /
+                .attr("r", function(d) { return  4.5; }) //Math.sqrt(d.size) /
                 .style("fill", color)
                 .on("click", Togglechildren)
                 .call(force.drag);
