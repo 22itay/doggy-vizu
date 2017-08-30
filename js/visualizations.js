@@ -23,6 +23,7 @@ function visualizeTests(tests, results, summed) {
     let counter = 0;
     let getY = () => 45 * counter++;
 
+    /*
     let allGs = vis2.selectAll("g")
         .data(summed)
         .enter()
@@ -37,7 +38,7 @@ function visualizeTests(tests, results, summed) {
         .attr("y", "20")
         .text(function (d) {
             return `${d.key}: ${Object.keys(d.values)}`
-        });
+        });*/
 }
 
 function analyzeDogs(err, data) {
@@ -91,7 +92,7 @@ function analyzeTests(error, subtests_descs, subtests_results) {
 function buildParsets(categories) {
     // recreate chart
     let sorted = Array.from(categories).sort();
-    chart2 = d3.parsets().dimensions(sorted);
+    chart2 = d3.parsets().dimensions(sorted).width(800);
 
     // remove old svg
     vis1.selectAll("svg").remove();
@@ -107,15 +108,3 @@ function buildParsets(categories) {
 statuses = ["guiding"];
 
 vis1 = d3.select("#vis1");
-
-vis2 = d3.select("#vis2")
-    .append("svg")
-    .attr("width", chart.width())
-    .attr("height", chart.height())
-    .call(d3.behavior.zoom()
-        .on("zoom", function () {
-            let translate = d3.event.translate;
-            translate[0] = 0;
-            vis2.attr("transform", "translate(" + translate + ") scale(" + d3.event.scale + ")")
-        }))
-    .append("g");;
