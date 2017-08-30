@@ -12,10 +12,6 @@ body {
     text-align: center;
 }
 
-.custom-tabs {
-    height: 960px;
-}
-
 .visu960 {
     margin:auto;display: block;
     width: 960px;
@@ -28,6 +24,10 @@ body {
 
 #vis1 {
     margin-top: 1rem;
+}
+
+.row{
+    margin: auto;
 }
 
 #parsets-toggles {
