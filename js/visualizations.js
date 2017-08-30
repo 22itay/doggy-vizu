@@ -8,21 +8,7 @@ function toDate(dateStr, delimeter = '/') {
     return new Date(+year, +month - 1, +day, 0, 0, 0, 0);
 }
 
-// load data
-d3.queue()
-    .defer(d3.csv, "/data/dogs.csv")
-    .await(analyzeDogs);
-d3.queue()
-    .defer(d3.csv, "/data/subtest-desc.csv")
-    .defer(d3.csv, "/data/subtests.csv")
-    .await(analyzeTests);
-
-var loadedData = {};
-
 function visualizeTests(tests, results, summed) {
-    let counter = 0;
-    let getY = () => 45 * counter++;
-
     /*
     let allGs = vis2.selectAll("g")
         .data(summed)
@@ -64,8 +50,7 @@ function analyzeDogs(err, data) {
     });
 
     loadedData["dogs"] = data;
-
-    buildParsets(["Passed", "Breed & Color Code", "Gender"]);
+    window.dispatchEvent(dogDataLoaded);
 }
 
 function analyzeTests(error, subtests_descs, subtests_results) {
@@ -84,6 +69,7 @@ function analyzeTests(error, subtests_descs, subtests_results) {
         subtests[testEntry.ID] = testEntry;
     });
 
+    loadedData["subtests"] = subtests;
     loadedData["subtest_results"] = subtests_results;
     loadedData["subtests_descs"] = subtests_descs;
 
@@ -95,7 +81,7 @@ function analyzeTests(error, subtests_descs, subtests_results) {
 
     loadedData["subtests_summed"] = summarized;
 
-    visualizeTests(subtests, subtests_results, summarized);
+    window.dispatchEvent(testDataLoaded);
 }
 
 function buildParsets(categories) {
@@ -114,6 +100,28 @@ function buildParsets(categories) {
 
 /////
 
-statuses = ["guiding"];
+let statuses = ["guiding"];
+var loadedData = {};
+let dogDataLoaded = new Event("dogDataLoaded");
+let testDataLoaded = new Event("testDataLoaded");
 
+// data loading queue
+d3.queue()
+    .defer(d3.csv, "/data/dogs.csv")
+    .await(analyzeDogs);
+d3.queue()
+    .defer(d3.csv, "/data/subtest-desc.csv")
+    .defer(d3.csv, "/data/subtests.csv")
+    .await(analyzeTests);
+
+// visual elements definition
 vis1 = d3.select("#vis1");
+
+//// 
+window.addEventListener("dogDataLoaded", function () {
+    buildParsets(["Passed", "Breed & Color Code", "Gender"]);
+});
+
+window.addEventListener("testDataLoaded", function () {
+    visualizeTests(loadedData["subtests"], loadedData["subtest_results"], loadedData["subtests_summed"]);
+});

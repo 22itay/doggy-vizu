@@ -28,7 +28,7 @@
     <div class="container custom-tabs">
         <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="parsets-tab" data-toggle="tab" href="#parsets" role="tab" aria-controls="parsets" aria-expanded="true">
+                <a class="nav-link" id="parsets-tab" data-toggle="tab" href="#parsets" role="tab" aria-controls="parsets" aria-expanded="true">
                     Dog Data Overview
                 </a>
             </li>
@@ -37,10 +37,15 @@
                     Family Tree
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="testmain-tab" data-toggle="tab" href="#testmain" role="tab" aria-controls="testmain">
+                    Main tests
+                </a>
+            </li>
         </ul>
 
         <main class="tab-content" id="myTabContent">
-            <section class="tab-pane fade show active" id="parsets" role="tabpanel" aria-labelledby="parsets-tab">
+            <section class="tab-pane fade" id="parsets" role="tabpanel" aria-labelledby="parsets-tab">
                 <div class="row">
                     <div class="col-9">
                         <div id="vis1">
@@ -74,6 +79,12 @@
 
             <section class="tab-pane fade" id="famtree" role="tabpanel" aria-labelledby="famtree-tab">
                 This is family tree
+            </section>
+            <!-- /famtree -->
+
+            <section class="tab-pane fade show active" id="testmain" role="tabpanel" aria-labelledby="testmain-tab">
+                <div class="row"></div>
+                <div class="row"></div>
             </section>
             <!-- /famtree -->
         </main>
