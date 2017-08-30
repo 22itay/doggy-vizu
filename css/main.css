@@ -15,6 +15,21 @@ body {
 .custom-tabs {
     height: 960px;
 }
+
+.visu960 {
+    margin:auto;display: block;
+    width: 960px;
+}
+
+.visu-details {
+    margin: 1em 0;
+    padding: 0 1em;
+}
+
+#vis1 {
+    margin-top: 1rem;
+}
+
 .node{
 fill: #ccc;
 stroke: #ffffff;
@@ -24,5 +39,4 @@ stroke-width: 2px;
 .link{
     stroke: #539552;
     stroke-width: 2px;
-
 }

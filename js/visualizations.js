@@ -56,7 +56,6 @@ function analyzeDogs(err, data) {
     loadedData["dogs"] = data;
 
     buildParsets(["Passed", "Breed & Color Code", "Gender"]);
-    buildParsets(["Passed", "Breed & Color Code"]);
 }
 
 function analyzeTests(error, subtests_descs, subtests_results) {
@@ -90,10 +89,13 @@ function analyzeTests(error, subtests_descs, subtests_results) {
 }
 
 function buildParsets(categories) {
-    chart2 = d3.parsets().dimensions(categories);
-    console.log(chart2)
+    // recreate chart
+    let sorted = Array.from(categories).sort();
+    chart2 = d3.parsets().dimensions(sorted);
+
+    // remove old svg
     vis1.selectAll("svg").remove();
-    svg1 = vis1.append("svg")
+    let svg1 = vis1.append("svg")
         .attr("width", chart2.width())
         .attr("height", chart2.height());
 
