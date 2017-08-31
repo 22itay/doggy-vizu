@@ -13,8 +13,9 @@ function stepper(step, start = 0) {
  */
 function buildParsets(categories) {
     // recreate chart
+    let width = visualWidth() * 9 / 12;
     let sorted = Array.from(categories).sort();
-    chart2 = d3.parsets().dimensions(sorted).width(800);
+    chart2 = d3.parsets().dimensions(sorted).width(width);
 
     // remove old svg
     vis1.selectAll("svg").remove();
@@ -109,7 +110,7 @@ function visualizeTestsScale() {
         .range([0, scaleWidth]);
 
     // remove previous elements
-    vis2_legend = d3.select("#vis-tests-legend").select("svg").remove();
+    vis2_legend.attr("width", totalWidth).selectAll("*").remove();
 
     // create the gradient
     var defs = vis2_legend.append("defs");
@@ -123,7 +124,6 @@ function visualizeTestsScale() {
 
     // create the scale itself
     let scale = vis2_legend
-        .attr("width", totalWidth)
         .append("g")
         .attr("transform", "translate(" + margin + ",0)")
         .attr("width", scaleWidth);
@@ -143,6 +143,7 @@ function visualizeTestsScale() {
 let vis1 = d3.select("#vis1");
 let vis2 = d3.select("#vis-tests").append("svg").attr("class", "w-100");
 let vis2_legend = d3.select("#vis-tests-legend").append("svg").attr("height", "40");
+let visualWidth = () => $(".custom-tabs").innerWidth() - 6 * 12;
 
 // event listeners
 window.addEventListener("testDataLoaded", function () {

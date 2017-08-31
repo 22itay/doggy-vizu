@@ -63,6 +63,14 @@ aside.sidebar{
     padding: 1rem;
 }
 
+aside.sidebar div {
+    margin-top: 1rem
+}
+
+aside.sidebar div div {
+    margin-top: 0;
+}
+
 aside.sidebar header{
     font-size: 1.5rem;
 }

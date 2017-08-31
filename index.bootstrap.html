@@ -96,10 +96,29 @@
                         <div id="vis-tests"></div>
                     </div>
                     <aside class="col-3 sidebar">
-                        <div class="row col-12">
-                            <input type="search" class="form-control" placeholder="Filter sub-tests here" id="tests-searchbox">
-                        </div>
-                        <div id="vis-tests-legend" class="w-100 mt-2"></div>
+                        <form id="tests-sidebar">
+                            <div id="vis-tests-legend" class="w-100 mt-2"></div>
+
+                            <!-- search_box -->
+                            <div class="row col-12">
+                                <input type="search" class="form-control" placeholder="Filter sub-tests here" name="filter">
+                            </div>
+                            <!-- /search_box -->
+
+                            <!-- view_toggle -->
+                            <div class="btn-group-vertical w-100" data-toggle="buttons">
+                                <label class="btn btn-outline-dark active">
+                              <input type="radio" name="display" value="dist_colors" checked> Distribution (Categorical)
+                            </label>
+                                <label class="btn btn-outline-dark">
+                              <input type="radio" name="display" value="dist_percent"> Distribution (Quantified)
+                            </label>
+                                <label class="btn btn-outline-dark">
+                              <input type="radio" name="display" value="dist_disqualification"> Disqualification Ratio
+                            </label>
+                            </div>
+                            <!-- /view_toggle -->
+                        </form>
                     </aside>
                 </div>
             </section>
