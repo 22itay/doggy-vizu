@@ -23,24 +23,48 @@ function analyzeDogs(err, data) {
     });
     loadedData["dogs"] = data;
     
-    var tamp=[];
+    dogTable2 = {};
+    var tamp=[],tPid=[],tAll=[];
+
     data.forEach(function (dogEntry) {
+        tAll.push(+dogEntry.ID);
         if (dogTable[dogEntry.FatherID]){
-            dogTable[dogEntry.FatherID].children.push(dogEntry);
-            tamp.push(+dogEntry.ID)
+            if (!dogTable2[dogEntry.FatherID])
+                dogTable2[dogEntry.FatherID]=dogTable[dogEntry.FatherID];
+            dogTable2[dogEntry.FatherID].children.push(dogEntry);
+            //tamp.push(+dogEntry.ID)
+        }else{
+            if (!dogTable2[dogEntry.FatherID])
+                dogTable2[dogEntry.FatherID]={
+                    "ID":dogEntry.FatherID,
+                    "children":[]
+                };
+            dogTable2[dogEntry.FatherID].children.push(dogEntry);
         }
+
 
         if (dogTable[dogEntry.MotherID]){
-            dogTable[dogEntry.MotherID].children.push(dogEntry);
+            if (!dogTable2[dogEntry.MotherID])
+                dogTable2[dogEntry.MotherID]=dogTable[dogEntry.MotherID];
+            dogTable2[dogEntry.MotherID].children.push(dogEntry);
             console.log(dogEntry.ID);
             tamp.push(+dogEntry.ID)
+        }else{
+            if (!dogTable2[dogEntry.MotherID])
+                dogTable2[dogEntry.MotherID]={
+                    "ID":dogEntry.MotherID,
+                    "children":[]
+                };
+            dogTable2[dogEntry.MotherID].children.push(dogEntry);
         }
     });
-
-    loadedData["dogsT"]=data.filter(function (dogEntry) {
-        return !tamp.includes(+dogEntry.ID);
-    });
- 
+    console.log("dogTable2");
+    console.log(dogTable2);
+    console.log(dogTable2.length);
+    // loadedData["dogsT"]=data.filter(function (dogEntry) {
+    //     return !tamp.includes(+dogEntry.ID);
+    // });
+    loadedData["dogsT"]=dogTable2;
     window.dispatchEvent(dogDataLoaded);
 }
 
@@ -128,7 +152,7 @@ function yIncreaser(step) {
 }
 
 let wScale = d3.scale.linear();
-wScale.domain([0, d3.max(loadedData["subtests_summed"], d => d.values.reduce((sum, x) => sum + x.values, 0))]);
+// wScale.domain([0, d3.max(loadedData["subtests_summed"], d => d.values.reduce((sum, x) => sum + x.values, 0))]);
 wScale.range([0, 100]);
 
 function visualizeTests(filterStr = "") {
