@@ -27,15 +27,20 @@ function analyzeDogs(err, data) {
 
     dogTree = {};
     data.forEach(function (dogEntry) {
-        let father = dogs[dogEntry.FatherID];
-        let mother = dogs[dogEntry.MotherID];
         let father_id = dogEntry.FatherID;
-        let motehr_id = dogEntry.MotherID;
+        let mother_id = dogEntry.MotherID;
+        let father = dogs[father_id] || { "ID": father_id, "children": [] };
+        let mother = dogs[mother_id] || { "ID": mother_id, "children": [] };
 
-        if (!dogTree[father_id]) {
-            dogTree[father_id] = dogs[father_id] ? dogs[father_id] : { "ID": father_id, "children": [] };
+        if (!dogTree[father_id])
+            dogTree[father_id] = father;
+
+        if (!dogTree[mother_id]) {
+            dogTree[mother_id] = mother;
         }
-        dogTree[dogEntry.FatherID].children.push(dogEntry);
+
+        dogTree[father_id].children.push(dogEntry);
+        dogTree[mother_id].children.push(dogEntry);
     });
     console.log(dogTree);
     console.log("------")
