@@ -11,8 +11,9 @@ root.forEach(function(currentValue, index, array){
     // console.log(width);
     // console.log(index);
    // console.log((width*index)/root.length);
-    root[index].x=110;
+   currentValue.x=110;
     currentValue.fixed = true;
+    currentValue.y=100;
 });
 console.log("roo");
 console.log(root);
@@ -61,14 +62,11 @@ var link = svg.selectAll(".link"),
     links = d3.layout.tree().links(nodes);
     
     nodes.forEach(function(d, i) {
-    d.x = width/2 + i;
-    d.y = 100*d.depth + 100;
+        if(!d.fixed){
+        d.x = width/2 + i;
+        d.y = 100*d.depth + 100;
+    }
     });
-    
-
-    // root.fixed = true;
-    // root.x = width / 2;
-    // root.y = 100;
     
     force.nodes(nodes)
     .links(links)
@@ -100,7 +98,7 @@ function tick(e) {
     nodes.forEach(function(d, i) {
         if(d.children) {
             if(i>0) {
-                var childrenSumX = 0;
+                var childrenSumX = 1;//0
                 d.children.forEach(function(d, i) {
                     childrenSumX += d.x;
                 });
@@ -109,6 +107,7 @@ function tick(e) {
             }
             else {
                 d.x += (width/2 - d.x) * 5 * ky;
+                console.log("else");
             };
         };
     });
