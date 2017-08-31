@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "http-server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,5 +20,8 @@
   "dependencies": {
     "d3": "^3.5.17",
     "d3-queue": "^3.0.7"
+  },
+  "devDependencies": {
+    "http-server": "^0.10.0"
   }
 }
