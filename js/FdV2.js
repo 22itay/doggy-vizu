@@ -28,8 +28,11 @@ var link = svg.selectAll(".link"),
     node = svg.selectAll(".node");
 
  function Sup(){
-    var nodes = flatten(root),
-    links = d3.layout.tree().links(nodes);
+    var nodes=[];
+     root.forEach(function(data){
+        Array.prototype.push.apply(nodes,flatten(data))
+    });
+    var links = d3.layout.tree().links(nodes);
     
     nodes.forEach(function(d, i) {
     d.x = width/2 + i;
@@ -100,18 +103,18 @@ function dblclick(d) {
     d3.select(this).classed("fixed", d.fixed = true);
   }
 function flatten(root) {
-var nodes = [], i = 0;
-function recurse(node, depth) {
-    if (node.children) {
-        node.children.forEach(function(child) {
-            recurse(child, depth + 1);
-        });
+    var nodes = [], i = 0;
+    function recurse(node, depth) {
+        if (node.children) {
+            node.children.forEach(function(child) {
+                recurse(child, depth + 1);
+            });
+        }
+        node.depth = depth;
+        node.id=++i
+        nodes.push(node);
     }
-    node.depth = depth;
-    node.id=++i
-    nodes.push(node);
-}
-recurse(root, 1);
+    recurse(root, 1);
 return nodes;
 }
 

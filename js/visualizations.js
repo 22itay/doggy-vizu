@@ -178,15 +178,12 @@ var tooltip = d3.select("body")
     .text("a simple tooltip");
 
 let wScale = d3.scale.linear();
-<<<<<<< HEAD
 // wScale.domain([0, d3.max(loadedData["subtests_summed"], d => d.values.reduce((sum, x) => sum + x.values, 0))]);
 wScale.range([0, 100]);
-=======
 let cScale = d3.scale.linear()
     .domain([0, 100])
     .range(["#FFFFDD", "#3E9583", "#1F2D86"].reverse())
     .interpolate(d3.interpolateHcl);
->>>>>>> origin/master
 
 function visualizeTests(filterStr = "") {
     let getY = yIncreaser(70);
