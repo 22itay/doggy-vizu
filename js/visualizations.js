@@ -3,6 +3,7 @@ if (!window.d3) {
     require("d3-queue");
 }
 
+
 function toDate(dateStr, delimeter = '/') {
     const [day, month, year] = dateStr.split(delimeter);
     return new Date(+year, +month - 1, +day, 0, 0, 0, 0);
@@ -22,7 +23,7 @@ function analyzeDogs(err, data) {
         dogTable[dogEntry.ID] = dogEntry;
     });
     loadedData["dogs"] = data;
-    
+
     dogTable2 = {};
     var tamp=[],tPid=[],tAll=[];
 
@@ -47,6 +48,7 @@ function analyzeDogs(err, data) {
             if (!dogTable2[dogEntry.MotherID])
                 dogTable2[dogEntry.MotherID]=dogTable[dogEntry.MotherID];
             dogTable2[dogEntry.MotherID].children.push(dogEntry);
+
             console.log(dogEntry.ID);
             tamp.push(+dogEntry.ID)
         }else{
@@ -60,10 +62,6 @@ function analyzeDogs(err, data) {
     });
     console.log("dogTable2");
     console.log(dogTable2);
-    console.log(dogTable2.length);
-    // loadedData["dogsT"]=data.filter(function (dogEntry) {
-    //     return !tamp.includes(+dogEntry.ID);
-    // });
     loadedData["dogsT"]=dogTable2;
     window.dispatchEvent(dogDataLoaded);
 }
@@ -74,7 +72,7 @@ function analyzeTests(error, subtests_descs, subtests_results) {
         resultEntry.TestID = +resultEntry.TestID;
         resultEntry.SubTestKind = +resultEntry.SubTestKind;
         resultEntry.Score = +resultEntry.Score;
-        resultEntry.Revoked = +resultEntry.Revoked === 1;
+        resultEntry.Disqualified = +resultEntry.Disqualified === 1;
     });
 
     subtests = {}
@@ -88,17 +86,27 @@ function analyzeTests(error, subtests_descs, subtests_results) {
     loadedData["subtest_results"] = subtests_results;
     loadedData["subtests_descs"] = subtests_descs;
 
-    summarized = d3.nest()
-        .key(function (d) { return d.SubTestKind; })
-        .key(function (d) { return d.Score; })
-        .rollup(function (v) { return v.length; })
-        .entries(subtests_results)
+    summed_scores = d3.nest()
+        .key(d => d.SubTestKind)
+        .key(d => d.Score)
+        .rollup(v => v.length)
+        .entries(subtests_results);
 
-    summarized.forEach(function (entry) {
+    summed_disqualifications = d3.nest()
+        .key(d => d.SubTestKind)
+        .key(d => d.Disqualified)
+        .rollup(v => v.length)
+        .entries(subtests_results);
+
+    console.log(summed_disqualifications);
+
+    summed_scores.forEach(function (entry) {
         entry.info = subtests[entry.key];
+        console.log(entry.info);
+        console.log(entry.values)
     })
 
-    loadedData["subtests_summed"] = summarized;
+    loadedData["subtests_summed_scores"] = summed_scores;
 
     window.dispatchEvent(testDataLoaded);
 }
@@ -136,6 +144,7 @@ d3.queue()
 // visual elements definition
 vis1 = d3.select("#vis1");
 vis2 = d3.select("#vis-tests").append("svg").attr("class", "w-100");
+vis2_legend = d3.select("#vis-tests-legend").append("svg").attr("width", "600").attr("height", "40");
 
 //// 
 window.addEventListener("dogDataLoaded", function () {
@@ -143,7 +152,12 @@ window.addEventListener("dogDataLoaded", function () {
 });
 
 window.addEventListener("testDataLoaded", function () {
+    let maxValue = d3.max(loadedData["subtests_summed_scores"], d => d.values.reduce((sum, x) => sum + x.values, 0));
+    wScale.domain([0, maxValue]);
+    wScale.range([0, 100]);
+
     visualizeTests();
+    visualizeTestsScale();
 });
 
 function yIncreaser(step) {
@@ -151,13 +165,32 @@ function yIncreaser(step) {
     return () => step * counter++;
 }
 
+
+/// TOOLTIP
+var tooltip = d3.select("body")
+    .append("div")
+    .style("background", "rgba(255,255,255,1)")
+    .style("border", "1px solid #000")
+    .style("padding", "1rem")
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .text("a simple tooltip");
+
 let wScale = d3.scale.linear();
+<<<<<<< HEAD
 // wScale.domain([0, d3.max(loadedData["subtests_summed"], d => d.values.reduce((sum, x) => sum + x.values, 0))]);
 wScale.range([0, 100]);
+=======
+let cScale = d3.scale.linear()
+    .domain([0, 100])
+    .range(["#FFFFDD", "#3E9583", "#1F2D86"].reverse())
+    .interpolate(d3.interpolateHcl);
+>>>>>>> origin/master
 
 function visualizeTests(filterStr = "") {
     let getY = yIncreaser(70);
-    let data = loadedData["subtests_summed"].filter(d => d.info.Description.includes(filterStr));
+    let data = loadedData["subtests_summed_scores"].filter(d => d.info.Description.includes(filterStr));
     let colorScale = d3.scale.category10();
 
     vis2.attr("height", data.length * 70);
@@ -181,6 +214,7 @@ function visualizeTests(filterStr = "") {
         .data((d, i) => {
             let sum = 0;
             return d.values.map(k => {
+                k.info = d.info
                 k.cumsum = sum;
                 sum += k.values;
                 return k;
@@ -191,9 +225,56 @@ function visualizeTests(filterStr = "") {
         .attr("width", (d, i, j) => { return wScale(d.values) + "%" })
         .attr("y", 30)
         .attr("x", (d, i, j) => { return wScale(d.cumsum) + "%" })
-        .attr("fill", (d, i) => colorScale(i)).attr("dx", 0)
+        .attr("fill", (d, i) => cScale(wScale(d.values)))
+        .on("mouseover", function (d) {
+            tooltip
+                .html(`Option: "${d.key}"<br>Votes: ${d.values} (${wScale(d.values).toFixed(3)}%)`)
+                .style("visibility", "visible");
+        })
+        .on("mousemove", function () {
+            tooltip
+                .style("top", (event.pageY - 10) + "px")
+                .style("left", (event.pageX + 10) + "px");
+        })
+        .on("mouseout", function () {
+            tooltip.style("visibility", "hidden");
+        });
+
 
     dataElem.exit()
         .remove();
+}
 
+function visualizeTestsScale() {
+    let axisScale = d3.scale.linear()
+        .domain([0, 100])
+        .range([0, 500]);
+
+    // create the gradient
+    var defs = vis2_legend.append("defs");
+    var gradient = defs.append("linearGradient")
+        .attr("id", "gradient");
+
+    //Append multiple color stops by using D3's data/enter step
+    gradient.selectAll("stop")
+        .data(cScale.range())
+        .enter().append("stop")
+        .attr("offset", function (d, i) { return i / (cScale.range().length - 1); })
+        .attr("stop-color", function (d) { return d; });
+
+    // create the scale itself
+    let scale = vis2_legend
+        .append("g")
+        .attr("transform", "translate(50,0)")
+        .attr("width", 500);
+    scale.append("rect")
+        .attr("height", "15")
+        .attr("width", "500")
+        .attr("fill", "url(#gradient)");
+    scale
+        .append("g")
+        .attr("transform", "translate(0,20)")
+        .attr("class", "axis")
+        .call(d3.svg.axis()
+            .scale(axisScale).tickFormat(d => d + "%"));
 }
