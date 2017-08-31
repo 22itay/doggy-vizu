@@ -123,7 +123,7 @@ d3.queue()
 // visual elements definition
 vis1 = d3.select("#vis1");
 vis2 = d3.select("#vis-tests").append("svg").attr("class", "w-100");
-vis2_legend = d3.select("#vis-tests-legend").append("svg").attr("height", "40");
+vis2_legend = d3.select("#vis-tests-legend").append("svg").attr("width", "600").attr("height", "40");
 
 //// 
 window.addEventListener("dogDataLoaded", function () {
@@ -158,8 +158,10 @@ var tooltip = d3.select("body")
 
 let wScale = d3.scale.linear();
 let cScale = d3.scale.linear()
-    .domain([0, 50, 100])
-    .range([d3.rgb("#FFECB3"), d3.rgb("#E85285"), d3.rgb("#6A1B9A")].reverse())
+    .domain([0, 100])
+    .range(["#FFFFDD", "#3E9583", "#1F2D86"].reverse())
+    .interpolate(d3.interpolateHcl);
+
 function visualizeTests(filterStr = "") {
     let getY = yIncreaser(70);
     let data = loadedData["subtests_summed_scores"].filter(d => d.info.Description.includes(filterStr));
@@ -173,7 +175,7 @@ function visualizeTests(filterStr = "") {
 
     dataElem.enter()
         .append("g")
-        .attr("height", 60)
+        .attr("height", 80)
         .attr("transform", () => "translate(0," + getY() + ")")
         .append("text")
         .attr("x", "0")
@@ -182,10 +184,7 @@ function visualizeTests(filterStr = "") {
             return `${d.info.Description}`
         });
 
-    dataElem.append("svg")
-        .attr("y", 30)
-        .attr("min-x", 10)
-        .selectAll("g")
+    dataElem.selectAll("g")
         .data((d, i) => {
             let sum = 0;
             return d.values.map(k => {
@@ -198,6 +197,7 @@ function visualizeTests(filterStr = "") {
         .append("rect")
         .attr("height", 30)
         .attr("width", (d, i, j) => { return wScale(d.values) + "%" })
+        .attr("y", 30)
         .attr("x", (d, i, j) => { return wScale(d.cumsum) + "%" })
         .attr("fill", (d, i) => cScale(wScale(d.values)))
         .on("mouseover", function (d) {
@@ -220,12 +220,9 @@ function visualizeTests(filterStr = "") {
 }
 
 function visualizeTestsScale() {
-    let width = $("#tests-sidebar").width();
-    vis2_legend = vis2_legend.attr("width", width)
-
     let axisScale = d3.scale.linear()
         .domain([0, 100])
-        .range([0, width - 100]);
+        .range([0, 500]);
 
     // create the gradient
     var defs = vis2_legend.append("defs");
@@ -243,21 +240,15 @@ function visualizeTestsScale() {
     let scale = vis2_legend
         .append("g")
         .attr("transform", "translate(50,0)")
-        .attr("width", width - 100);
-
+        .attr("width", 500);
     scale.append("rect")
         .attr("height", "15")
-        .attr("width", width - 100)
+        .attr("width", "500")
         .attr("fill", "url(#gradient)");
-
     scale
         .append("g")
         .attr("transform", "translate(0,20)")
         .attr("class", "axis")
         .call(d3.svg.axis()
-            .scale(axisScale)
-            .orient("bottom")
-            .ticks(5)
-            .tickFormat(d => d + "%")
-        );
+            .scale(axisScale).tickFormat(d => d + "%"));
 }
