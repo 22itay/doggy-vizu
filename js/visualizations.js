@@ -10,12 +10,10 @@ function toDate(dateStr, delimeter = '/') {
 }
 
 function analyzeDogs(err, data) {
-    dogTable = {};
+    dogs = {};
 
     data.forEach(function (dogEntry) {
         dogEntry.ID = +dogEntry.ID;
-        dogEntry.x=Number(100);
-        dogEntry.X=Number(1000);
         dogEntry.FatherID = +dogEntry.FatherID;
         dogEntry.MotherID = +dogEntry.MotherID;
         dogEntry["Age at Training"] = +dogEntry["Age at Training"];
@@ -23,49 +21,30 @@ function analyzeDogs(err, data) {
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
         dogEntry.children = [];
         dogEntry._children = [];
-        dogTable[dogEntry.ID] = dogEntry;
+        dogs[dogEntry.ID] = dogEntry;
     });
     loadedData["dogs"] = data;
 
-    dogTable2 = {};
-    var tamp=[],tPid=[],tAll=[];
-
+    dogTree = {};
     data.forEach(function (dogEntry) {
-        tAll.push(+dogEntry.ID);
-        if (dogTable[dogEntry.FatherID]){
-            if (!dogTable2[dogEntry.FatherID])
-                dogTable2[dogEntry.FatherID]=dogTable[dogEntry.FatherID];
-            dogTable2[dogEntry.FatherID].children.push(dogEntry);
-            //tamp.push(+dogEntry.ID)
-        }else{
-            if (!dogTable2[dogEntry.FatherID])
-                dogTable2[dogEntry.FatherID]={
-                    "ID":dogEntry.FatherID,
-                    "children":[]
-                };
-            dogTable2[dogEntry.FatherID].children.push(dogEntry);
+        let father_id = dogEntry.FatherID;
+        let mother_id = dogEntry.MotherID;
+        let father = dogs[father_id] || { "ID": father_id, "children": [] };
+        let mother = dogs[mother_id] || { "ID": mother_id, "children": [] };
+
+        if (!dogTree[father_id])
+            dogTree[father_id] = father;
+
+        if (!dogTree[mother_id]) {
+            dogTree[mother_id] = mother;
         }
 
-
-        if (dogTable[dogEntry.MotherID]){
-            if (!dogTable2[dogEntry.MotherID])
-                dogTable2[dogEntry.MotherID]=dogTable[dogEntry.MotherID];
-            dogTable2[dogEntry.MotherID].children.push(dogEntry);
-
-            console.log(dogEntry.ID);
-            tamp.push(+dogEntry.ID)
-        }else{
-            if (!dogTable2[dogEntry.MotherID])
-                dogTable2[dogEntry.MotherID]={
-                    "ID":dogEntry.MotherID,
-                    "children":[]
-                };
-            dogTable2[dogEntry.MotherID].children.push(dogEntry);
-        }
+        dogTree[father_id].children.push(dogEntry);
+        dogTree[mother_id].children.push(dogEntry);
     });
-    console.log("dogTable2");
-    console.log(dogTable2);
-    loadedData["dogsT"]=dogTable2;
+    console.log(dogTree);
+    console.log("------")
+    loadedData["dogsT"] = dogTree;
     window.dispatchEvent(dogDataLoaded);
 }
 
@@ -101,12 +80,8 @@ function analyzeTests(error, subtests_descs, subtests_results) {
         .rollup(v => v.length)
         .entries(subtests_results);
 
-    console.log(summed_disqualifications);
-
     summed_scores.forEach(function (entry) {
         entry.info = subtests[entry.key];
-        console.log(entry.info);
-        console.log(entry.values)
     })
 
     loadedData["subtests_summed_scores"] = summed_scores;
