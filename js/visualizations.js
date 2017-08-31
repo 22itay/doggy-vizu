@@ -1,5 +1,10 @@
-function stepper(step) {
-    counter = 0;
+/**
+ * Creates a function that goes in constant steps (auto-y etc)
+ * @param {Number} step the step size
+ * @param {Number} start the start of step
+ */
+function stepper(step, start = 0) {
+    counter = start;
     return () => step * counter++;
 }
 
@@ -37,6 +42,7 @@ function visualizeTests(filterStr = "") {
         .data(data);
 
     // Adds labels
+    // TODO: switch data source for "passed/not passed"
     // TODO: label toggle
     let labels = dataElem.enter()
         .append("g")
@@ -50,6 +56,7 @@ function visualizeTests(filterStr = "") {
         });
 
     // Adds stacked bar charts
+    // TODO: switch data representation for passed/not passed
     let stackedBars = dataElem.selectAll("g")
         .data((d, i) => {
             let sum = 0;
@@ -91,17 +98,20 @@ function visualizeTests(filterStr = "") {
 /**
  * Creates the scale
  */
+// TODO: support visualization switching.
 function visualizeTestsScale() {
+    let totalWidth = $("#vis-tests-legend").parent().width();
+    let margin = 25;
+    let scaleWidth = totalWidth - 2 * margin;
+
     let axisScale = d3.scale.linear()
         .domain([0, 100])
-        .range([0, 500]);
+        .range([0, scaleWidth]);
 
     // create the gradient
     var defs = vis2_legend.append("defs");
     var gradient = defs.append("linearGradient")
         .attr("id", "gradient");
-
-    //Append multiple color stops by using D3's data/enter step
     gradient.selectAll("stop")
         .data(cScale.range())
         .enter().append("stop")
@@ -110,25 +120,26 @@ function visualizeTestsScale() {
 
     // create the scale itself
     let scale = vis2_legend
+        .attr("width", totalWidth)
         .append("g")
-        .attr("transform", "translate(50,0)")
-        .attr("width", 500);
+        .attr("transform", "translate(" + margin + ",0)")
+        .attr("width", scaleWidth);
     scale.append("rect")
         .attr("height", "15")
-        .attr("width", "500")
+        .attr("width", scaleWidth)
         .attr("fill", "url(#gradient)");
     scale
         .append("g")
         .attr("transform", "translate(0,20)")
         .attr("class", "axis")
         .call(d3.svg.axis()
-            .scale(axisScale).tickFormat(d => d + "%"));
+            .scale(axisScale).ticks(5).tickFormat(d => d + "%"));
 }
 
 // visual elements definition
 let vis1 = d3.select("#vis1");
 let vis2 = d3.select("#vis-tests").append("svg").attr("class", "w-100");
-let vis2_legend = d3.select("#vis-tests-legend").append("svg").attr("width", "600").attr("height", "40");
+let vis2_legend = d3.select("#vis-tests-legend").append("svg").attr("height", "40");
 
 // event listeners
 window.addEventListener("dogDataLoaded", function () {
@@ -156,9 +167,9 @@ let tooltip = d3.select("body")
     .style("visibility", "hidden")
     .text("a simple tooltip");
 
-
+// Scales
 let wScale = d3.scale.linear();
 let cScale = d3.scale.linear()
-    .domain([0, 100])
-    .range(["#FFFFDD", "#3E9583", "#1F2D86"].reverse())
+    .domain([0, 50, 100])
+    .range(["#2d0f41", "#a73b8f", "#f9cdac"])
     .interpolate(d3.interpolateHcl);

@@ -39,19 +39,24 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link active" id="testmain-tab" data-toggle="tab" href="#testmain" role="tab" aria-controls="testmain">
-                    Main tests
+                    Test Results
                 </a>
             </li>
         </ul>
+        <!-- /nav links -->
 
         <main class="tab-content" id="myTabContent">
             <section class="tab-pane fade" id="parsets" role="tabpanel" aria-labelledby="parsets-tab">
                 <div class="row">
                     <div class="col-9">
+                        <h1>Parallel Sets</h1>
                         <div id="vis1">
                         </div>
                     </div>
-                    <div class="col-3">
+                    <aside class="col-3 sidebar">
+                        <header>
+                            Filters
+                        </header>
                         <ul class="list-group" id="parsets-toggles">
                             <li class="list-group-item">
                                 <label><input type="checkbox"> Age at Training</label>
@@ -72,25 +77,30 @@
                                 <label><input type="checkbox"> Status</label>
                             </li>
                         </ul>
-                    </div>
+                    </aside>
                 </div>
             </section>
             <!-- /parsets -->
 
             <section class="tab-pane fade" id="famtree" role="tabpanel" aria-labelledby="famtree-tab">
+                <h1>Family Tree</h1>
+
                 This is family tree
             </section>
             <!-- /famtree -->
 
             <section class="tab-pane fade show active" id="testmain" role="tabpanel" aria-labelledby="testmain-tab">
-                <div class="row" style="margin-top:1em;">
-                    <div class="form-grid col-12">
-                        <input type="search" class="form-control" placeholder="Filter sub-tests here" id="tests-searchbox">
-                    </div>
-                </div>
                 <div class="row w-100">
-                    <div id="vis-tests-legend" class="w-100"></div>
-                    <div id="vis-tests" class="w-100"></div>
+                    <div class="col-9">
+                        <h1>Test Results</h1>
+                        <div id="vis-tests"></div>
+                    </div>
+                    <aside class="col-3 sidebar">
+                        <div class="row col-12">
+                            <input type="search" class="form-control" placeholder="Filter sub-tests here" id="tests-searchbox">
+                        </div>
+                        <div id="vis-tests-legend" class="w-100 mt-2"></div>
+                    </aside>
                 </div>
             </section>
             <!-- /famtree -->

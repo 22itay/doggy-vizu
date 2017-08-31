@@ -30,10 +30,6 @@ body {
     margin: auto;
 }
 
-#parsets-toggles {
-    margin-top: 1rem;
-}
-
 .node{
     cursor: pointer;
     fill: #ccc;
@@ -61,3 +57,12 @@ body {
     fill: none;
     stroke: #000;
   }
+
+aside.sidebar{
+    background: #eee;
+    padding: 1rem;
+}
+
+aside.sidebar header{
+    font-size: 1.5rem;
+}
