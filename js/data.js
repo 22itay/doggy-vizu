@@ -14,9 +14,7 @@ function analyzeDogs(err, data) {
         dogEntry["Age at Training"] = +dogEntry["Age at Training"];
         dogEntry.Birthday = toDate(dogEntry.Birthday);
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
-        dogEntry.children = [];
-        dogEntry._children = [];
-        dogEntry.x=5;
+        //dogEntry._children = [];
         dogs[dogEntry.ID] = dogEntry;
     });
     loadedData["dogs"] = data;
@@ -25,8 +23,8 @@ function analyzeDogs(err, data) {
     data.forEach(function (dogEntry) {
         let father_id = dogEntry.FatherID;
         let mother_id = dogEntry.MotherID;
-        let father = dogs[father_id] || { "ID": father_id, "children": [] };
-        let mother = dogs[mother_id] || { "ID": mother_id, "children": [] };
+        let father = { "name": father_id, "children": [],"y":100 };//dogs[father_id] || 
+        let mother = { "name": mother_id, "children": [],"y":100 };//dogs[mother_id] || 
 
         if (!dogTree[father_id])
             dogTree[father_id] = father;
@@ -34,10 +32,12 @@ function analyzeDogs(err, data) {
         if (!dogTree[mother_id]) {
             dogTree[mother_id] = mother;
         }
-
-        dogTree[father_id].children.push(dogEntry);
-        dogTree[mother_id].children.push(dogEntry);
+        let me ={ "name": dogEntry.ID, }
+        dogTree[father_id].children.push(me);
+        dogTree[mother_id].children.push(me);
     });
+    dogTree[0]='';
+    //dogTree
     console.log(dogTree);
     console.log("------")
     loadedData["dogsT"] = dogTree;

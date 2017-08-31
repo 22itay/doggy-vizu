@@ -5,15 +5,34 @@ if (!window.d3) {
 
 window.addEventListener("dogDataLoaded", function () {
     //root = Object.values(loadedData["dogsT"]);
-    root =loadedData["dogsT"][626];
+     root =Object.values(loadedData["dogsT"]);
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+     root.pop();
+    root.forEach(function (currentValue, index, array) {
+        currentValue.x = (width * index) / root.length;
+        currentValue.fixed = true;
+    });
+    
+    //root.push(root2);
     console.log(root);
-    // root.forEach(function (currentValue, index, array) {
-    //     currentValue.x = (width * index) / root.length;
-    //     currentValue.fixed = true;
-    //     currentValue.y=100;
-    // });
     Sup();
-    //update();
 });
 
 
@@ -22,9 +41,9 @@ var width = 800,
 var root = [];
 
 var force = d3.layout.force()
-    .linkDistance(40)
+    .linkDistance(70)
+    .charge(-600)
     .gravity(.2)
-    .charge(-200)
     .size([width, height]);
 
 var svg = d3.select("#vis3").append('svg')
@@ -35,93 +54,86 @@ var svg = d3.select("#vis3").append('svg')
 var link = svg.selectAll(".link"),
     node = svg.selectAll(".node");
 
-// var nodes = [];
-// var links;
+var nodes = [];
+var nodesArr=[];
+var links2;
+var links=[];
 
 function Sup() {
-    // root.forEach(function (currentValue, index, array) {
-    //     Array.prototype.push.apply(nodes, flatten(currentValue));
-    // });
-    // links = d3.layout.tree().links(nodes);
-    
-    // nodes.forEach(function(d, i) {
-    //     if(!d.fixed){
-    //     d.x = width/2 + i;
-    //     d.y = 100*d.depth + 100;
-    // }
-    // });
-    var nodes = flatten(root),
-    links = d3.layout.tree().links(nodes);
-    nodes.forEach(function(d, i) {
-        d.x = width/2 + i;
-        d.y = 100*d.depth + 100;
+    root.forEach(function (currentValue, index, array) {
+        let x=flatten(currentValue);
+        Array.prototype.push.apply(nodes,x);
+        nodesArr.push(x);
+        links.push(d3.layout.tree().links(x));
     });
     
-    root.fixed = true;
-    root.x = width / 2;
-    root.y = 100;
+    links = d3.layout.tree().links(nodes);
+    console.log(links);
+    console.log(links2);
+    nodes.forEach(function(d, i) {
+      
+        d.x = width/2 + i;
+        d.y = 200*d.depth + 150;
+    
+    });
     
     force.nodes(nodes)
         .links(links)
         .on("tick", tick)
         .start();
 
-    var link = svg.selectAll("line")
+     link = svg.selectAll("line")
         .data(links)
         .enter()
         .insert("svg:line")
         .attr("class", "link");
 
-    var node = svg.selectAll("circle.node")
+     node = svg.selectAll("circle.node")
         .data(nodes)
         .enter()
         .append("svg:circle")
-        .attr("r", 4.5)
+        .attr("r", 10)
         .attr("class", "node")
-        .on("click", Togglechildren)
+        //.on("click", Togglechildren)
         .call(force.drag);
-
-        function tick(e) {
-            
-            var ky = e.alpha;
-            links.forEach(function (d, i) {
-                d.target.y += (d.target.depth * 100 - d.target.y) * 5 * ky;
-            });
-        
-            nodes.forEach(function(d, i) {
-                if(d.children) {
-                    if(i>0) {
-                        var childrenSumX = 1;//0
-                        d.children.forEach(function(d, i) {
-                            childrenSumX += d.x;
-                        });
-                        var childrenCount = d.children.length;
-                        d.x += ((childrenSumX / childrenCount) - d.x) * 5 * ky;
-                    }
-                    else {
-                        if(d.x==NaN)
-                            d.x=5;
-                        console.log(d.x);
-                        d.x += (width/2 - d.x) * 5 * ky;
-                       
-                    };
-                };
-            });
-        
-            link.attr("x1", function (d) { return d.source.x; })
-                .attr("y1", function (d) { return d.source.y; })
-                .attr("x2", function (d) { return d.target.x; })
-                .attr("y2", function (d) { return d.target.y; });
-        
-            node.attr("cx", function (d) { return d.x; })
-                .attr("cy", function (d) { return d.y; })
-            //.on("click", Togglechildren)
-            .on("dblclick", dblclick)
-            .call(dragnode);
-        };
 }
 
+function tick(e) {
+    
+    var ky = e.alpha;
+    links.forEach(function (d, i) {
+        d.target.y += (d.target.depth * 100 - d.target.y) * 5 * ky;
+    });
 
+    nodes.forEach(function(d, i) {
+        if(d.children) {
+            if(i>0) {
+                var childrenSumX = 0;
+                d.children.forEach(function(d, i) {
+                    childrenSumX += d.x;
+                });
+                var childrenCount = d.children.length;
+                d.x += ((childrenSumX / childrenCount) - d.x) * 5 * ky;
+            }
+            else {
+                console.log(d.x);
+                d.x += (width/2 - d.x) * 5 * ky;
+               
+            };
+        };
+    });
+
+    link.attr("x1", function (d) { return d.source.x; })
+        .attr("y1", function (d) { return d.source.y; })
+        .attr("x2", function (d) { return d.target.x; })
+        .attr("y2", function (d) { return d.target.y; });
+
+    node.attr("cx", function (d) { return d.x; })
+        .attr("cy", function (d) { return d.y; })
+    // .on("click", Togglechildren)
+    // .on("dblclick", dblclick)
+    // .call(dragnode);
+};
 function dblclick(d) {
     d3.select(this).classed("fixed", d.fixed = false);
 }
@@ -144,15 +156,15 @@ function flatten(root) {
     recurse(root, 1);
     return nodes;
 }
-var dragnode = force.drag()
-    .on("dragstart", dragstart);
+// var dragnode = force.drag()
+//     .on("dragstart", dragstart);
 
 
 function update() {
-     nodes = flatten(root);
-    // root.forEach(function (currentValue, index, array) {
-    //     Array.prototype.push.apply(nodes, flatten(currentValue));
-    // });
+    nodes = [];
+    root.forEach(function (currentValue, index, array) {
+        Array.prototype.push.apply(nodes, flatten(currentValue));
+    });
     links = d3.layout.tree().links(nodes);
 
     // Restart the force layout.
@@ -209,6 +221,6 @@ function Togglechildren(d) {
             d.children = d._children;
             d._children = null;
         }
-        //update();
+        update();
     }
 }
