@@ -16,6 +16,7 @@ function analyzeDogs(err, data) {
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
         dogEntry.children = [];
         dogEntry._children = [];
+        dogEntry.x=5;
         dogs[dogEntry.ID] = dogEntry;
     });
     loadedData["dogs"] = data;

@@ -4,7 +4,7 @@ if (!window.d3) {
 }
 
 window.addEventListener("dogDataLoaded", function () {
-var root= loadedData["dogsT"][636];
+var root= loadedData["dogsT"][626];
 
 
 var width = 800,
@@ -81,20 +81,20 @@ node.attr("cx", function(d) { return d.x; })
 	.attr("cy", function(d) { return d.y; });
 });
 
-function flatten(root) {
-var nodes = [];
-function recurse(node, depth) {
-	if (node.children) {
-		node.children.forEach(function(child) {
-			recurse(child, depth + 1);
-		});
-	}
-	node.depth = depth;
-	nodes.push(node);
-}
-recurse(root, 1);
-return nodes;
-}
-
 
 });
+
+function flatten(root) {
+    var nodes = [];
+    function recurse(node, depth) {
+        if (node.children) {
+            node.children.forEach(function(child) {
+                recurse(child, depth + 1);
+            });
+        }
+        node.depth = depth;
+        nodes.push(node);
+    }
+    recurse(root, 1);
+    return nodes;
+}
