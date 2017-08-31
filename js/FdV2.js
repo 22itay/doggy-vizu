@@ -4,13 +4,14 @@ if (!window.d3) {
 }
 
 window.addEventListener("dogDataLoaded", function () {
-    root = Object.values(loadedData["dogsT"]);
+    //root = Object.values(loadedData["dogsT"]);
+    root =loadedData["dogsT"][626];
     console.log(root);
-    root.forEach(function (currentValue, index, array) {
-        currentValue.x = (width * index) / root.length;
-        currentValue.fixed = true;
-        currentValue.y=100;
-    });
+    // root.forEach(function (currentValue, index, array) {
+    //     currentValue.x = (width * index) / root.length;
+    //     currentValue.fixed = true;
+    //     currentValue.y=100;
+    // });
     Sup();
     //update();
 });
@@ -34,25 +35,31 @@ var svg = d3.select("#vis3").append('svg')
 var link = svg.selectAll(".link"),
     node = svg.selectAll(".node");
 
-var nodes = [];
-var links;
+// var nodes = [];
+// var links;
 
 function Sup() {
-
-
-
-    root.forEach(function (currentValue, index, array) {
-        Array.prototype.push.apply(nodes, flatten(currentValue));
-    });
-    console.log(nodes);
-    links = d3.layout.tree().links(nodes);
+    // root.forEach(function (currentValue, index, array) {
+    //     Array.prototype.push.apply(nodes, flatten(currentValue));
+    // });
+    // links = d3.layout.tree().links(nodes);
     
+    // nodes.forEach(function(d, i) {
+    //     if(!d.fixed){
+    //     d.x = width/2 + i;
+    //     d.y = 100*d.depth + 100;
+    // }
+    // });
+    var nodes = flatten(root),
+    links = d3.layout.tree().links(nodes);
     nodes.forEach(function(d, i) {
-        if(!d.fixed){
         d.x = width/2 + i;
         d.y = 100*d.depth + 100;
-    }
     });
+    
+    root.fixed = true;
+    root.x = width / 2;
+    root.y = 100;
     
     force.nodes(nodes)
         .links(links)
@@ -73,42 +80,48 @@ function Sup() {
         .attr("class", "node")
         .on("click", Togglechildren)
         .call(force.drag);
+
+        function tick(e) {
+            
+            var ky = e.alpha;
+            links.forEach(function (d, i) {
+                d.target.y += (d.target.depth * 100 - d.target.y) * 5 * ky;
+            });
+        
+            nodes.forEach(function(d, i) {
+                if(d.children) {
+                    if(i>0) {
+                        var childrenSumX = 1;//0
+                        d.children.forEach(function(d, i) {
+                            childrenSumX += d.x;
+                        });
+                        var childrenCount = d.children.length;
+                        d.x += ((childrenSumX / childrenCount) - d.x) * 5 * ky;
+                    }
+                    else {
+                        if(d.x==NaN)
+                            d.x=5;
+                        console.log(d.x);
+                        d.x += (width/2 - d.x) * 5 * ky;
+                       
+                    };
+                };
+            });
+        
+            link.attr("x1", function (d) { return d.source.x; })
+                .attr("y1", function (d) { return d.source.y; })
+                .attr("x2", function (d) { return d.target.x; })
+                .attr("y2", function (d) { return d.target.y; });
+        
+            node.attr("cx", function (d) { return d.x; })
+                .attr("cy", function (d) { return d.y; })
+            //.on("click", Togglechildren)
+            .on("dblclick", dblclick)
+            .call(dragnode);
+        };
 }
 
-function tick(e) {
-    var ky = e.alpha;
-    links.forEach(function (d, i) {
-        d.target.y += (d.target.depth * 100 - d.target.y) * 5 * ky;
-    });
 
-    nodes.forEach(function(d, i) {
-        if(d.children) {
-            if(i>0) {
-                var childrenSumX = 1;//0
-                d.children.forEach(function(d, i) {
-                    childrenSumX += d.x;
-                });
-                var childrenCount = d.children.length;
-                d.x += ((childrenSumX / childrenCount) - d.x) * 5 * ky;
-            }
-            else {
-                d.x += (width/2 - d.x) * 5 * ky;
-                console.log("else");
-            };
-        };
-    });
-
-    link.attr("x1", function (d) { return d.source.x; })
-        .attr("y1", function (d) { return d.source.y; })
-        .attr("x2", function (d) { return d.target.x; })
-        .attr("y2", function (d) { return d.target.y; });
-
-    node.attr("cx", function (d) { return d.x; })
-        .attr("cy", function (d) { return d.y; })
-    // .on("click", Togglechildren)
-    // .on("dblclick", dblclick)
-    // .call(dragnode);
-};
 function dblclick(d) {
     d3.select(this).classed("fixed", d.fixed = false);
 }
@@ -129,7 +142,6 @@ function flatten(root) {
         nodes.push(node);
     }
     recurse(root, 1);
-    console.log(nodes);
     return nodes;
 }
 var dragnode = force.drag()
@@ -137,13 +149,10 @@ var dragnode = force.drag()
 
 
 function update() {
-    // console.log("update():");
-    // console.log(root);
-    var nodes = [];
-    root.forEach(function (currentValue, index, array) {
-        Array.prototype.push.apply(nodes, flatten(currentValue));
-    });
-    console.log(nodes);
+     nodes = flatten(root);
+    // root.forEach(function (currentValue, index, array) {
+    //     Array.prototype.push.apply(nodes, flatten(currentValue));
+    // });
     links = d3.layout.tree().links(nodes);
 
     // Restart the force layout.
@@ -200,6 +209,6 @@ function Togglechildren(d) {
             d.children = d._children;
             d._children = null;
         }
-        update();
+        //update();
     }
 }
