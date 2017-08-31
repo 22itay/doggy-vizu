@@ -14,12 +14,15 @@ function analyzeDogs(err, data) {
 
     data.forEach(function (dogEntry) {
         dogEntry.ID = +dogEntry.ID;
+        dogEntry.x=Number(100);
+        dogEntry.X=Number(1000);
         dogEntry.FatherID = +dogEntry.FatherID;
         dogEntry.MotherID = +dogEntry.MotherID;
         dogEntry["Age at Training"] = +dogEntry["Age at Training"];
         dogEntry.Birthday = toDate(dogEntry.Birthday);
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
         dogEntry.children = [];
+        dogEntry._children = [];
         dogTable[dogEntry.ID] = dogEntry;
     });
     loadedData["dogs"] = data;

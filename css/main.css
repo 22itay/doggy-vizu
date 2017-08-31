@@ -36,9 +36,12 @@ body {
 
 .node{
     cursor: pointer;
-    fill: #ccc;
-    stroke: #ffffff;
-    stroke-width: 2px;
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+.node {
+    font: 10px sans-serif;
 }
 
 .link{
@@ -50,14 +53,14 @@ body {
 
 .node.fixed {
     fill: #f00;
-  }
+}
 
-  .axis text {
+.axis text {
     font: 10px sans-serif;
-  }
-  
-  .axis path,
-  .axis line {
+}
+
+.axis path,
+.axis line {
     fill: none;
     stroke: #000;
-  }
+}
