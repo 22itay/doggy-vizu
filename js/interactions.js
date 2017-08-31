@@ -1,5 +1,21 @@
 let parsetsLabels = new Set(["Passed", "Breed & Color Code", "Gender"]);
 
+window.addEventListener("dogDataLoaded", function () {
+    buildParsets(parsetsLabels);
+});
+
+window.addEventListener("testDataLoaded", function () {
+    visualizeTests();
+    visualizeTestsScale();
+});
+
+window.addEventListener("resize", function () {
+    if (window.dataLoaded) {
+        buildParsets(parsetsLabels);
+        visualizeTestsScale();
+    }
+})
+
 $("#parsets-toggles input").click(function (event) {
     let data = $(this).parent().text().substring(1);
     console.log(parsetsLabels);

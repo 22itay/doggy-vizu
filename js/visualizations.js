@@ -108,6 +108,9 @@ function visualizeTestsScale() {
         .domain([0, 100])
         .range([0, scaleWidth]);
 
+    // remove previous elements
+    vis2_legend = d3.select("#vis-tests-legend").select("svg").remove();
+
     // create the gradient
     var defs = vis2_legend.append("defs");
     var gradient = defs.append("linearGradient")
@@ -142,18 +145,10 @@ let vis2 = d3.select("#vis-tests").append("svg").attr("class", "w-100");
 let vis2_legend = d3.select("#vis-tests-legend").append("svg").attr("height", "40");
 
 // event listeners
-window.addEventListener("dogDataLoaded", function () {
-    buildParsets(["Passed", "Breed & Color Code", "Gender"]);
-});
-
 window.addEventListener("testDataLoaded", function () {
     let maxValue = d3.max(loadedData["subtests_summed_scores"], d => d.values.reduce((sum, x) => sum + x.values, 0));
     wScale.domain([0, maxValue]);
     wScale.range([0, 100]);
-
-    // call the visualizations
-    visualizeTests();
-    visualizeTestsScale();
 });
 
 /// TOOLTIP

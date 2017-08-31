@@ -82,10 +82,12 @@ function analyzeTests(error, subtests_descs, subtests_results) {
     loadedData["subtests_summed_scores"] = summed_scores;
 
     window.dispatchEvent(testDataLoaded);
+    window.dataLoaded = true;
 }
 
 let statuses = ["guiding"];
 var loadedData = {};
+window.dataLoaded = false;
 let dogDataLoaded = new Event("dogDataLoaded");
 let testDataLoaded = new Event("testDataLoaded");
 
