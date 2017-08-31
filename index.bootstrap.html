@@ -83,14 +83,18 @@
             <!-- /famtree -->
 
             <section class="tab-pane fade show active" id="testmain" role="tabpanel" aria-labelledby="testmain-tab">
-                <div class="row" style="margin-top:1em;">
-                    <div class="form-grid col-12">
-                        <input type="search" class="form-control" placeholder="Filter sub-tests here" id="tests-searchbox">
+                <div class="row w-100" style="margin-top: 1em;">
+                    <aside class="col-4" id="tests-sidebar">
+                        <div class="sidebar">
+                            <div class="form-grid col-12">
+                                <input type="search" class="form-control" placeholder="Filter sub-tests here" id="tests-searchbox">
+                            </div>
+                            <div id="vis-tests-legend" class="w-100"></div>
+                        </div>
+                    </aside>
+                    <div class="col-md-8 ml-auto">
+                        <div id="vis-tests" class="w-100"></div>
                     </div>
-                </div>
-                <div class="row w-100">
-                    <div id="vis-tests-legend" class="w-100"></div>
-                    <div id="vis-tests" class="w-100"></div>
                 </div>
             </section>
             <!-- /famtree -->

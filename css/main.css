@@ -52,6 +52,9 @@ body {
     fill: #f00;
   }
 
+  .axis {
+      width: 100%;
+  }
   .axis text {
     font: 10px sans-serif;
   }
@@ -60,4 +63,32 @@ body {
   .axis line {
     fill: none;
     stroke: #000;
+  }
+
+  .row {
+      position: relative;
+  }
+  /*
+    Sidebar
+  */
+  #tests-sidebar {
+      position: relative;
+      height:100%;
+  }
+
+  #tests-sidebar .pos-abs {
+      position: absolute;
+      width:100%;
+      height:100%;
+
+  }
+
+  #tests-sidebar .pos-fixed {
+      position: fixed;
+      width:100%;
+      height:100%;
+      background: #eee;      
+  }
+  #vis-tests-legend {
+      margin-top: 1rem;
   }
