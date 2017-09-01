@@ -36,6 +36,7 @@ function getSelectedBreeds() {
 }
 
 // Event Listeners
+let currentTab = "testmain-tab";
 window.addEventListener("dogDataLoaded", function () {
     buildBreedsView();
     buildParsets(parsetsLabels);
@@ -51,6 +52,15 @@ window.addEventListener("resize", function () {
         buildParsets(parsetsLabels);
         visualizeTests(opts);
         visualizeTestsScale(opts);
+        visualizeTreeScale(famtreeCurrent);
+    }
+})
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    if (window.dataLoaded) {
+        if (e.target.id === "famtree-tab")
+            visualizeTreeScale(famtreeCurrent);
+        else if (e.target.id === "testmain-tab")
+            visualizeTestsScale(opts);
     }
 })
 
@@ -111,9 +121,11 @@ let changeFunc = function (e) {
 $('#tests-sidebar').on('keyup change', ':input', changeFunc);
 
 let famtreeForm = document.forms["famtree-controls"];
+let famtreeCurrent = "heatmap";
 $('#famtree-controls').on('keyup change', ':input', function () {
     // toggle controls
-    console.log(famtreeForm.elements['famtree_display'].value);
+    famtreeCurrent = famtreeForm.elements['famtree_display'].value;
+    visualizeTreeScale(famtreeCurrent);
     //change_famtree_colors(famtreeForm.elements['famtree_display'].value)
 
     // TODO: change scale according to the display mode
