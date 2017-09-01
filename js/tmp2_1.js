@@ -50,10 +50,12 @@ var colorfunctions={"passed":function (d){
 	},"breed":function (d){
 		return breedColorScale(d.breed);
 	},"heatmap":function (d){
-		return plasmaScale(d.score);
+		// console.log(d.totalPassed);
+		// console.log(d.totalChildren);
+		return plasmaScale((256 * d.totalPassed / d.totalChildren) ||0);
 	},"norm":function (d) {
-		if (isNumber(d.score) && d.score >= 0)
-			 return color(d.score);
+		if (isNumber(d.color) && d.color >= 0)
+			 return color(d.color);
 		else
 			 return default_node_color;
 	}

@@ -44,7 +44,10 @@ function analyzeDogs(err, data) {
             "passed": dogEntry.Passed,
             "type": "circle",
             "size": 35,
-            "score": 7,
+            "color": 7,
+            "score":0,
+            "totalChildren":-1,
+            "totalPassed":0,
             "name": dogEntry["Name (English)"] + " [" + dogEntry.ID + "]"
         });
     });
@@ -61,11 +64,18 @@ function analyzeDogs(err, data) {
                     "gender": "Male",
                     "passed": true,
                     "size": 20,
-                    "score": 2,
+                    "color": 2,
+                    "totalChildren":1,
+                    "totalPassed":0,
                     "name": `Father ${father_id}`
                 });
             } else {
                 graph.nodes[indexInNodes[father_id]].type = "square";
+                graph.nodes[indexInNodes[father_id]].totalChildren++;
+            }
+            if(dogEntry.Passed){
+                graph.nodes[indexInNodes[father_id]].totalPassed++;
+                console.log("passed")
             }
             graph.links.push({ "source": indexInNodes[father_id], "target": indexInNodes[dogEntry.ID] })
         }
@@ -77,16 +87,23 @@ function analyzeDogs(err, data) {
                     "gender": "Female",
                     "passed": true,
                     "size": 20,
-                    "score": 4,
+                    "color": 4,
+                    "totalChildren":1,
+                    "totalPassed":0,
                     "name": `Mother [${father_id}]`
                 });
             } else {
                 graph.nodes[indexInNodes[mother_id]].type = "diamond";
+                graph.nodes[indexInNodes[mother_id]].totalChildren++;
+            }
+            if(dogEntry.Passed){
+                graph.nodes[indexInNodes[mother_id]].totalPassed++;
+                console.log("passed")
             }
             graph.links.push({ "source": indexInNodes[mother_id], "target": indexInNodes[dogEntry.ID] })
         }
     });
-
+    
     window.dispatchEvent(dogDataLoaded);
 }
 
