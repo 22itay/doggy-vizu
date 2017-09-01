@@ -6,28 +6,22 @@ if (!window.d3) {
 window.addEventListener("dogDataLoaded", function () {
     //root = Object.values(loadedData["dogsT"]);
      root =Object.values(loadedData["dogsT"]);
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
-     root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
+    //  root.pop();
     root.forEach(function (currentValue, index, array) {
         currentValue.x = (width * index) / root.length;
-        currentValue.fixed = true;
+        //currentValue.fixed = true;
     });
     
     //root.push(root2);
@@ -36,14 +30,14 @@ window.addEventListener("dogDataLoaded", function () {
 });
 
 
-var width = 800,
+var width = 1800,
     height = 500;
 var root = [];
 
 var force = d3.layout.force()
-    .linkDistance(70)
+    .linkDistance(50)
     .charge(-600)
-    .gravity(.2)
+    .gravity(.6)
     .size([width, height]);
 
 var svg = d3.select("#vis3").append('svg')
@@ -72,9 +66,10 @@ function Sup() {
     console.log(links2);
     nodes.forEach(function(d, i) {
       
+        if(!d.fixed){
         d.x = width/2 + i;
         d.y = 200*d.depth + 150;
-    
+        }
     });
     
     force.nodes(nodes)
@@ -88,7 +83,7 @@ function Sup() {
         .insert("svg:line")
         .attr("class", "link");
 
-     node = svg.selectAll("circle.node")
+     node = svg.selectAll(".node")
         .data(nodes)
         .enter()
         .append("svg:circle")
@@ -96,6 +91,10 @@ function Sup() {
         .attr("class", "node")
         //.on("click", Togglechildren)
         .call(force.drag);
+
+        var circle = node.append("path")
+            .attr("d", d3.svg.symbol()
+            .type(function(d) { return d.type; }))
 }
 
 function tick(e) {
