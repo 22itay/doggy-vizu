@@ -59,8 +59,11 @@ var colorfunctions={"passed":function (d){
 	}
 };
 function change_famtree_colors(colorfunction){
-	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["norm"];
-	update_famtree_view();
+	console.log(colorfunction);
+	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["heatmap"];
+	console.log(currentcolorFn);
+	//update_famtree_view();
+	circle.style("fill",currentcolorFn);
 }
 function toggle_famtree(toggle,value){
 	switch(toggle) {
@@ -79,8 +82,8 @@ function toggle_famtree(toggle,value){
 	update_famtree_view();
 }
 
-var currentcolorFn=colorfunctions["norm"];
-var link,node,text;
+var currentcolorFn=colorfunctions["heatmap"];
+var link,node,text,circle;
 var linkedByIndex = {};
 window.addEventListener("dogDataLoaded", function () {
 	console.log(graph);
@@ -121,8 +124,7 @@ window.addEventListener("dogDataLoaded", function () {
 		.data(graph.nodes)
 		.enter().append("g")
 		.attr("class", "node")
-
-		.call(force.drag)
+		.call(force.drag);
 
 
 	node.on("dblclick.zoom", function (d) {
@@ -131,8 +133,6 @@ window.addEventListener("dogDataLoaded", function () {
 		var dcy = (h / 2 - d.y * zoom.scale());
 		zoom.translate([dcx, dcy]);
 		g.attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
-
-
 	});
 
 	var tocolor = "fill";
@@ -142,7 +142,7 @@ window.addEventListener("dogDataLoaded", function () {
 		towhite = "fill"
 	}
 
-	var circle = node.append("path")
+	 circle = node.append("path")
 			.attr("d", d3.svg.symbol()
 			.size(function (d) { return Math.PI * Math.pow(size(d.size) || nominal_base_node_size, 2); })
 			.type(function (d) { return d.type; }))
