@@ -2,31 +2,227 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link rel="stylesheet" href="./css/d3.parsets.css">
-    <link rel="stylesheet" href="./css/main.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="css/d3.parsets.css">
+    <link rel="stylesheet" href="css/main.css">
+    <title>Guide Dog Dataset Visualizations</title>
 </head>
 
 <body>
-    <div id="vis1">
-    </div>
 
-    <div id="vis2">
-    </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">Visualization</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault"
+            aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <!-- /nav -->
 
-    <div id="vis-famtree">
-    </div>
+    <div class="container custom-tabs">
+        <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="parsets-tab" data-toggle="tab" href="#parsets" role="tab" aria-controls="parsets" aria-expanded="true">
+                    Dog Data Overview
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="famtree-tab" data-toggle="tab" href="#famtree" role="tab" aria-controls="famtree">
+                    Family Tree
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="testmain-tab" data-toggle="tab" href="#testmain" role="tab" aria-controls="testmain">
+                    Test Results
+                </a>
+            </li>
+        </ul>
+        <!-- /nav links -->
 
+        <main class="tab-content" id="myTabContent">
+            <section class="tab-pane fade" id="parsets" role="tabpanel" aria-labelledby="parsets-tab">
+                <div class="row">
+                    <div class="col-9">
+                        <h1>Parallel Sets</h1>
+                        <div id="vis1">
+                        </div>
+                    </div>
+                    <aside class="col-3 sidebar">
+                        <header>
+                            Filters
+                        </header>
+                        <ul class="list-group" id="parsets-toggles">
+                            <li class="list-group-item">
+                                <label><input type="checkbox"> Age at Training</label>
+                            </li>
+                            <li class="list-group-item form-check">
+                                <label><input type="checkbox" checked> Breed & Color Code</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox" checked> Gender</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox" checked> Passed</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox"> Secondary Status</label>
+                            </li>
+                            <li class="list-group-item">
+                                <label><input type="checkbox"> Status</label>
+                            </li>
+                        </ul>
+                    </aside>
+                </div>
+            </section>
+            <!-- /parsets -->
+
+            <section class="tab-pane fade" id="famtree" role="tabpanel" aria-labelledby="famtree-tab">
+                <div class="row">
+                    <div class="col-9">
+                        <h1>Family Tree</h1>
+                        <div id="vis-famtree"></div>
+                    </div>
+
+                    <aside class="col-3 sidebar">
+                        <header>
+                            Legend
+                        </header>
+
+                        <div id="legend-famtree">
+                        </div>
+                        <div>&#9670; Mothers | &#9632; Fathers | &#9679; Children
+                        </div>
+
+                        <header>
+                            Filters
+                        </header>
+                        <form name="famtree-controls" id="famtree-controls">
+                            <span class="filter-header">Display</span>
+                            <div class="list-group">
+                                <label class="list-group-item">
+                                    <input type="radio" name="famtree_display" value="heatmap" checked> Heatmap
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="radio" name="famtree_display" value="breed"> Breed & Color Code
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="radio" name="famtree_display" value="passed"> Passed/Not Passed
+                                </label>
+                            </div>
+
+                            <span class="filter-header">Show</span>
+                            <div class="list-group">
+                                <label class="list-group-item">
+                                    <input type="checkbox" name="famtree_show_mothers" value="heatmap" checked> Mothers
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="checkbox" name="famtree_show_fathers" value="dist_cat" checked> Fathers
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="checkbox" name="famtree_show_orphans" value="dist_cat" checked> Orphans
+                                </label>
+                            </div>
+                        </form>
+                    </aside>
+                </div>
+            </section>
+            <!-- /famtree -->
+
+            <section class="tab-pane fade show active" id="testmain" role="tabpanel" aria-labelledby="testmain-tab">
+                <div class="row w-100">
+                    <div class="col-9">
+                        <h1>Test Results</h1>
+                        <div id="vis-tests"></div>
+                    </div>
+                    <aside class="col-3 sidebar">
+                        <form id="tests-sidebar" name="tests-sidebar">
+                            <header>
+                                Legend
+                            </header>
+
+                            <div id="vis-tests-legend" class="w-100"></div>
+                            <header>
+                                Filters
+                            </header>
+                            <!-- search_box -->
+                            <div class="form-input">
+                                <input type="search" class="form-control" placeholder="Search for a sub-test" name="filter">
+                            </div>
+                            <!-- /search_box -->
+
+                            <!-- -->
+                            <div class="form-check">
+                                <label class="form-check-label"><input class="form-check-input" type="checkbox" name="use_labels" checked> Use labels </label>
+                            </div>
+                            <!-- -->
+
+                            <!-- view_toggle -->
+                            <div class="list-group">
+                                <label class="list-group-item">
+                                    <input type="radio" name="display" value="dist_cat"> Dist. (Ordinal)
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="radio" name="display" value="dist_percent" checked> Dist. (Percentage)
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="radio" name="display" value="dist_disqualification"> Disqualification
+                                </label>
+                            </div>
+                            <!-- /view_toggle -->
+
+                            <!-- breeds_controls -->
+                            <div>
+                                <span class="filter-header">Breed &amp; Color Codes</span>
+                                <ul class="list-group" id="test-side-breedfilter">
+                                </ul>
+                            </div>
+                            <!-- /breeds_controls  -->
+
+                            <!-- -->
+                            <div>
+                                <span class="filter-header">Gender</span>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <label><input name="gender-check-male" type="checkbox" checked> Male</label>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <label><input name="gender-check-female" type="checkbox" checked> Female</label>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- -->
+                        </form>
+                    </aside>
+                </div>
+            </section>
+            <!-- /famtree -->
+        </main>
+    </div>
+    <!-- /.container -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+        crossorigin="anonymous"></script>
+
+    <!-- Visualization JS -->
     <script src="./node_modules/d3/d3.min.js"></script>
     <script src="./node_modules/d3-queue/build/d3-queue.js"></script>
     <script src="./js/d3.parsets.js"></script>
     <script src="./js/data.js"></script>
+    <script src="./js/visualizations.js"></script>
+    <script src="./js/interactions.js"></script>
     <script src="./js/tmp2_1.js"></script>
-    <!-- <script src="./js/FdV2.js"></script> -->
 </body>
 
 </html>
