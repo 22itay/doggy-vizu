@@ -23,8 +23,8 @@ function analyzeDogs(err, data) {
     data.forEach(function (dogEntry) {
         let father_id = dogEntry.FatherID;
         let mother_id = dogEntry.MotherID;
-        let father = { "name": father_id, "children": [],"y":10,"fixed":true,"type":"square" };//dogs[father_id] || 
-        let mother = { "name": mother_id, "children": [],"y":310,"fixed":true, "type":"circle" };//dogs[mother_id] || 
+        let father = { "name": father_id, "children": [],"y":10,"fixed":true,"type":"square","size": 20 };//dogs[father_id] || 
+        let mother = { "name": mother_id, "children": [],"y":310,"fixed":true, "type":"circle","size": 20 };//dogs[mother_id] || 
 
         if (!dogTree[father_id])
             dogTree[father_id] = father;
@@ -32,7 +32,7 @@ function analyzeDogs(err, data) {
         if (!dogTree[mother_id]) {
             dogTree[mother_id] = mother;
         }
-        let me ={ "name": dogEntry.ID,"y":100,"type":"circle" }
+        let me ={ "name": dogEntry.ID,"y":100,"type":"circle","size": 20 }
         dogTree[father_id].children.push(me);
         dogTree[mother_id].children.push(me);
     });

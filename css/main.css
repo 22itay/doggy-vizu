@@ -48,6 +48,11 @@ body {
     fill: #f00;
   }
 
+  #vis3 text {
+    font-family: sans-serif;
+    pointer-events: none;
+  }
+
   .axis text {
     font: 10px sans-serif;
   }
