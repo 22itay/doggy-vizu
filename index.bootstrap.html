@@ -88,10 +88,38 @@
                         <h1>Family Tree</h1>
                         <div id="vis-famtree"></div>
                     </div>
+
                     <aside class="col-3 sidebar">
                         <header>
                             Filters
                         </header>
+                        <form name="famtree-controls">
+                            <span class="filter-header">Display</span>
+                            <div class="list-group">
+                                <label class="list-group-item">
+                                    <input type="radio" name="display" value="heatmap" checked> Heatmap
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="radio" name="display" value="breed"> Breed & Color Code
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="radio" name="display" value="breed"> Passed/Not Passed
+                                </label>
+                            </div>
+
+                            <span class="filter-header">Show</span>
+                            <div class="list-group">
+                                <label class="list-group-item">
+                                    <input type="checkbox" name="display" value="heatmap"> Mothers
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="checkbox" name="display" value="dist_cat"> Fathers
+                                </label>
+                                <label class="list-group-item">
+                                    <input type="checkbox" name="display" value="dist_cat"> Orphans
+                                </label>
+                            </div>
+                        </form>
                     </aside>
                 </div>
             </section>
@@ -126,14 +154,14 @@
                             <!-- -->
 
                             <!-- view_toggle -->
-                            <div class="btn-group-vertical w-100" data-toggle="buttons">
-                                <label class="btn btn-outline-dark">
+                            <div class="list-group">
+                                <label class="list-group-item">
                                     <input type="radio" name="display" value="dist_cat"> Dist. (Ordinal)
                                 </label>
-                                <label class="btn btn-outline-dark active">
+                                <label class="list-group-item">
                                     <input type="radio" name="display" value="dist_percent" checked> Dist. (Percentage)
                                 </label>
-                                <label class="btn btn-outline-dark">
+                                <label class="list-group-item">
                                     <input type="radio" name="display" value="dist_disqualification"> Disqualification
                                 </label>
                             </div>
@@ -143,14 +171,13 @@
                             <div>
                                 <span class="filter-header">Gender</span>
                                 <ul class="list-group">
-                                    <li class="list-group-item form-check">
+                                    <li class="list-group-item">
                                         <label><input name="gender-check-male" type="checkbox" checked> Male</label>
                                     </li>
                                     <li class="list-group-item">
                                         <label><input name="gender-check-female" type="checkbox" checked> Female</label>
                                     </li>
                                 </ul>
-
                             </div>
                             <!-- -->
                         </form>
