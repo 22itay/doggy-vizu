@@ -242,7 +242,7 @@ let tooltip = d3.select("body")
 let percentScale = d3.scale.linear();
 let linearColorScale = d3.scale.linear()
     .domain([0, 50, 100])
-    .range(["#2d0f41", "#a73b8f", "#f9cdac"])
+    .range(["#f9cdac", "#a73b8f", "#2d0f41"])
     .interpolate(d3.interpolateHcl);
 
 // google scale code taken from:

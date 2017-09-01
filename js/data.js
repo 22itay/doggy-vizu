@@ -16,32 +16,9 @@ function analyzeDogs(err, data) {
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
         dogs[dogEntry.ID] = dogEntry;
     });
+
     loadedData["dogs"] = data;
     loadedData["dogsTable"] = dogs;
-
-    // dogTree = {};
-    // data.forEach(function (dogEntry) {
-    //     let father_id = dogEntry.FatherID;
-    //     let mother_id = dogEntry.MotherID;
-    //     let father = { "name": father_id, "children": [],"y":10,"fixed":true,"type":"square","size": 20 };//dogs[father_id] || 
-    //     let mother = { "name": mother_id, "children": [],"y":310,"fixed":true, "type":"circle","size": 20 };//dogs[mother_id] || 
-
-    //     if (!dogTree[father_id])
-    //         dogTree[father_id] = father;
-
-    //     if (!dogTree[mother_id]) {
-    //         dogTree[mother_id] = mother;
-    //     }
-    //     let me ={ "name": dogEntry.ID,"y":100,"type":"circle","size": 20 }
-    //     dogTree[father_id].children.push(me);
-    //     dogTree[mother_id].children.push(me);
-    // });
-    // dogTree[0]='';
-    // //dogTree
-    // console.log(dogTree);
-    // console.log("------")
-    //loadedData["dogsT"] = dogTree;
-
 
     graph = {
         "graph": [],
@@ -49,35 +26,66 @@ function analyzeDogs(err, data) {
         "nodes": [],
         "directed": false,
         "multigraph": false
-    };//?
-    console.log(data);
-    data.forEach(function (dogEntry) {
+    };
+    let indexInNodes = {}; // associative array.
 
+    function insertDogToGraph(dog) {
+        let index = graph.nodes.push(dog) - 1; // index of dog
+        indexInNodes[dog.id] = index;
+        return index;
+    }
+
+    data.forEach(function (dogEntry) {
+        insertDogToGraph({
+            "id": dogEntry.ID || 0,
+            "gender": dogEntry.Gender,
+            "breed": dogEntry["Breed & Color Code"],
+            "passed": dogEntry.Passed,
+            "type": "circle",
+            "size": 20,
+            "score": 5,
+            "name": dogEntry["Name (English)"] + " [" + dogEntry.ID + "]"
+        });
+    });
+
+    data.forEach(function (dogEntry) {
         let father_id = dogEntry.FatherID || 0;
         let mother_id = dogEntry.MotherID || 0;
 
-        let father = { "id": father_id,"type":"square","size": 20,"score": 5,"name":"F" };
-        let mother = { "id": mother_id,"type":"circle","size": 20,"score": 5,"name":"M" };
-        let me ={ "id": dogEntry.ID||0,"type":"circle","size": 20,"score": 5,"name":"C" };
-        graph.nodes.push(me)
-        let meIndex = graph.nodes.length - 1;
-        let fatherIndex = graph.nodes.indexOf(father);
-        if (fatherIndex == -1) {
-            fatherIndex += graph.nodes.push(father);
-            console.log("fatherIndex");
-            console.log(fatherIndex);
+        if (father_id != 0) {
+            if (!indexInNodes[father_id]) {
+                insertDogToGraph({
+                    "id": father_id,
+                    "type": "square",
+                    "gender": "Male",
+                    "passed": true,
+                    "size": 20,
+                    "score": 5,
+                    "name": `Father ${father_id}`
+                });
+            } else {
+                graph.nodes[indexInNodes[father_id]].type = "square";
+            }
+            graph.links.push({ "source": indexInNodes[father_id], "target": indexInNodes[dogEntry.ID] })
         }
-        let motherIndex = graph.nodes.indexOf(mother);
-        if (motherIndex == -1) {
-            motherIndex += graph.nodes.push(mother);
-            console.log("motherIndex");
-            console.log(motherIndex);
+        if (mother_id != 0) {
+            if (!indexInNodes[mother_id]) {
+                insertDogToGraph({
+                    "id": mother_id,
+                    "type": "diamond",
+                    "gender": "Female",
+                    "passed": true,
+                    "size": 20,
+                    "score": 5,
+                    "name": `Mother [${father_id}]`
+                });
+            } else {
+                graph.nodes[indexInNodes[mother_id]].type = "diamond";
+            }
+            graph.links.push({ "source": indexInNodes[mother_id], "target": indexInNodes[dogEntry.ID] })
         }
-        graph.links.push({ "source": fatherIndex, "target": meIndex })
-        graph.links.push({ "source": motherIndex, "target": meIndex })
-
-
     });
+
     console.log(graph);
     //loadedData["dogsT"] = graph;
 
