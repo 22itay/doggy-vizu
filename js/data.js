@@ -14,10 +14,10 @@ function analyzeDogs(err, data) {
         dogEntry["Age at Training"] = +dogEntry["Age at Training"];
         dogEntry.Birthday = toDate(dogEntry.Birthday);
         dogEntry.Passed = statuses.indexOf(dogEntry.Status) !== -1;
-        //dogEntry._children = [];
         dogs[dogEntry.ID] = dogEntry;
     });
     loadedData["dogs"] = data;
+    loadedData["dogsTable"] = dogs;
 
     // dogTree = {};
     // data.forEach(function (dogEntry) {
@@ -43,14 +43,16 @@ function analyzeDogs(err, data) {
     //loadedData["dogsT"] = dogTree;
 
 
-    graph = {"graph": [],
+    graph = {
+        "graph": [],
         "links": [],
         "nodes": [],
         "directed": false,
-        "multigraph": false};//?
-        console.log(data);
+        "multigraph": false
+    };//?
+    console.log(data);
     data.forEach(function (dogEntry) {
-       
+
         let father_id = dogEntry.FatherID || 0;
         let mother_id = dogEntry.MotherID || 0;
 
@@ -58,31 +60,38 @@ function analyzeDogs(err, data) {
         let mother = { "id": mother_id,"type":"circle","size": 20,"score": 5,"name":"M" };
         let me ={ "id": dogEntry.ID||0,"type":"circle","size": 20,"score": 5,"name":"C" };
         graph.nodes.push(me)
-        let meIndex=graph.nodes.length-1;
-        let fatherIndex=graph.nodes.indexOf(father);
-        if(fatherIndex==-1){
-            fatherIndex+= graph.nodes.push(father);
+        let meIndex = graph.nodes.length - 1;
+        let fatherIndex = graph.nodes.indexOf(father);
+        if (fatherIndex == -1) {
+            fatherIndex += graph.nodes.push(father);
             console.log("fatherIndex");
             console.log(fatherIndex);
         }
-        let motherIndex=graph.nodes.indexOf(mother);
-        if(motherIndex==-1){
-            motherIndex+= graph.nodes.push(mother);
+        let motherIndex = graph.nodes.indexOf(mother);
+        if (motherIndex == -1) {
+            motherIndex += graph.nodes.push(mother);
             console.log("motherIndex");
             console.log(motherIndex);
         }
-        graph.links.push({"source": fatherIndex, "target": meIndex})
-        graph.links.push({"source": motherIndex, "target": meIndex})
-        
-     
+        graph.links.push({ "source": fatherIndex, "target": meIndex })
+        graph.links.push({ "source": motherIndex, "target": meIndex })
+
+
     });
-console.log(graph);
+    console.log(graph);
     //loadedData["dogsT"] = graph;
 
     window.dispatchEvent(dogDataLoaded);
 }
 
-function analyzeTests(error, subtests_descs, subtests_results) {
+function analyzeTests(error, tests, subtests_descs, subtests_results) {
+    testsTable = {}
+    tests.forEach(function (testEntry) {
+        testEntry.TestID = +testEntry.TestID;
+        testEntry.DogID = +testEntry.DogID;
+        testsTable[testEntry.TestID] = testEntry;
+    });
+
     subtests_results.forEach(function (resultEntry) {
         resultEntry.SubTestID = +resultEntry.SubTestID;
         resultEntry.TestID = +resultEntry.TestID;
@@ -98,30 +107,56 @@ function analyzeTests(error, subtests_descs, subtests_results) {
         subtests[testEntry.ID] = testEntry;
     });
 
+    loadedData["tests"] = testsTable;
     loadedData["subtests"] = subtests;
     loadedData["subtest_results"] = subtests_results;
     loadedData["subtests_descs"] = subtests_descs;
 
-    summed_scores = d3.nest()
-        .key(d => d.SubTestKind)
-        .key(d => d.Score)
-        .rollup(v => v.length)
-        .entries(subtests_results);
-
-    summed_disqualifications = d3.nest()
-        .key(d => d.SubTestKind)
-        .key(d => d.Disqualified)
-        .rollup(v => v.length)
-        .entries(subtests_results);
-
-    summed_scores.forEach(function (entry) {
-        entry.info = subtests[entry.key];
-    })
-
-    loadedData["subtests_summed_scores"] = summed_scores;
+    filterSummarizeData([]);
 
     window.dispatchEvent(testDataLoaded);
     window.dataLoaded = true;
+}
+
+// filter definition: {key: "dogProperty", values=["val1","val2",...]};
+// if value list is empty, the filter will decline everything.
+// assumes property exists on the dog object.
+function filterSummarizeData(filters) {
+    let filteredTests = filterTestsByParticipants(filters);
+
+    let summed_scores = d3.nest()
+        .key(d => d.SubTestKind)
+        .key(d => d.Score)
+        .rollup(v => v.length)
+        .entries(filteredTests);
+
+    let summed_disqualifications = d3.nest()
+        .key(d => d.SubTestKind)
+        .key(d => d.Disqualified)
+        .rollup(v => v.length)
+        .entries(filteredTests);
+
+    summed_scores.forEach(function (entry) {
+        entry.info = loadedData["subtests"][entry.key];
+    })
+    summed_disqualifications.forEach(function (entry) {
+        entry.info = loadedData["subtests"][entry.key];
+    })
+
+    loadedData["subtests_summed_scores"] = summed_scores;
+    loadedData["summed_disqualifications"] = summed_disqualifications;
+}
+
+function filterTestsByParticipants(filters) {
+    return loadedData["subtest_results"].filter(function (entry) {
+        // get the dog entry
+        let dog = loadedData["dogsTable"][loadedData["tests"][entry.TestID].DogID];
+
+        // run through the filters
+        return filters.reduce(function (result, filter) {
+            return result && filter.values.indexOf(dog[filter.key]) != -1;
+        }, true);
+    });
 }
 
 let statuses = ["guiding"];
@@ -135,6 +170,7 @@ d3.queue()
     .defer(d3.csv, "/data/dogs.csv")
     .await(analyzeDogs);
 d3.queue()
+    .defer(d3.csv, "/data/tests.csv")
     .defer(d3.csv, "/data/subtest-desc.csv")
     .defer(d3.csv, "/data/subtests.csv")
     .await(analyzeTests);
