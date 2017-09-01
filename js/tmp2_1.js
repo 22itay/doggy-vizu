@@ -43,8 +43,7 @@ var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
 var g = svg.append("g");
 svg.style("cursor","move");
 
-d3.json("graph.json", function(error, graph) {
-
+window.addEventListener("dogDataLoaded", function() {
 	console.log(graph);
 var linkedByIndex = {};
     graph.links.forEach(function(d) {
@@ -133,7 +132,7 @@ var linkedByIndex = {};
 	.style("text-anchor", "middle");
 	else 
 	text.attr("dx", function(d) {return (size(d.size)||nominal_base_node_size);})
-    .text(function(d) { return '\u2002'+d.id; });
+    .text(function(d) { return '\u2002'+d.name; });
 
 	node.on("mouseover", function(d) {
 	set_highlight(d);

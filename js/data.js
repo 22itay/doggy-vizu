@@ -19,28 +19,66 @@ function analyzeDogs(err, data) {
     });
     loadedData["dogs"] = data;
 
-    dogTree = {};
+    // dogTree = {};
+    // data.forEach(function (dogEntry) {
+    //     let father_id = dogEntry.FatherID;
+    //     let mother_id = dogEntry.MotherID;
+    //     let father = { "name": father_id, "children": [],"y":10,"fixed":true,"type":"square","size": 20 };//dogs[father_id] || 
+    //     let mother = { "name": mother_id, "children": [],"y":310,"fixed":true, "type":"circle","size": 20 };//dogs[mother_id] || 
+
+    //     if (!dogTree[father_id])
+    //         dogTree[father_id] = father;
+
+    //     if (!dogTree[mother_id]) {
+    //         dogTree[mother_id] = mother;
+    //     }
+    //     let me ={ "name": dogEntry.ID,"y":100,"type":"circle","size": 20 }
+    //     dogTree[father_id].children.push(me);
+    //     dogTree[mother_id].children.push(me);
+    // });
+    // dogTree[0]='';
+    // //dogTree
+    // console.log(dogTree);
+    // console.log("------")
+    //loadedData["dogsT"] = dogTree;
+
+
+    graph = {"graph": [],
+        "links": [],
+        "nodes": [],
+        "directed": false,
+        "multigraph": false};//?
+        console.log(data);
     data.forEach(function (dogEntry) {
-        let father_id = dogEntry.FatherID;
-        let mother_id = dogEntry.MotherID;
-        let father = { "name": father_id, "children": [],"y":10,"fixed":true,"type":"square","size": 20 };//dogs[father_id] || 
-        let mother = { "name": mother_id, "children": [],"y":310,"fixed":true, "type":"circle","size": 20 };//dogs[mother_id] || 
+       
+        let father_id = dogEntry.FatherID || 0;
+        let mother_id = dogEntry.MotherID || 0;
 
-        if (!dogTree[father_id])
-            dogTree[father_id] = father;
-
-        if (!dogTree[mother_id]) {
-            dogTree[mother_id] = mother;
+        let father = { "id": father_id,"type":"circle","size": 20,"score": 5,"name":"lala" };
+        let mother = { "id": mother_id,"type":"circle","size": 20,"score": 5,"name":"lala" };
+        let me ={ "id": dogEntry.ID||0,"type":"circle","size": 20,"score": 5,"name":"lala" };
+        graph.nodes.push(me)
+        let meIndex=graph.nodes.length-1;
+        let fatherIndex=graph.nodes.indexOf(father);
+        if(fatherIndex==-1){
+            fatherIndex+= graph.nodes.push(father);
+            console.log("fatherIndex");
+            console.log(fatherIndex);
         }
-        let me ={ "name": dogEntry.ID,"y":100,"type":"circle","size": 20 }
-        dogTree[father_id].children.push(me);
-        dogTree[mother_id].children.push(me);
+        let motherIndex=graph.nodes.indexOf(mother);
+        if(motherIndex==-1){
+            motherIndex+= graph.nodes.push(mother);
+            console.log("motherIndex");
+            console.log(motherIndex);
+        }
+        graph.links.push({"source": fatherIndex, "target": meIndex})
+        graph.links.push({"source": motherIndex, "target": meIndex})
+        
+     
     });
-    dogTree[0]='';
-    //dogTree
-    console.log(dogTree);
-    console.log("------")
-    loadedData["dogsT"] = dogTree;
+console.log(graph);
+    //loadedData["dogsT"] = graph;
+
     window.dispatchEvent(dogDataLoaded);
 }
 
