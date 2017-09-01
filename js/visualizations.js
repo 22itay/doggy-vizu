@@ -35,7 +35,7 @@ function visualizeTests(opts) {
     // visual options
     let stepSize = 35;
     let barsShift = opts.useLabels ? 30 : 0;
-    let barsHeight = 30;
+    let barsHeight = stepSize;
 
     // TODO: more sophisticated filtering
     let data = [];
@@ -88,7 +88,7 @@ function visualizeTests(opts) {
             });
         }).enter()
         .append("rect")
-        .attr("height", barsHeight)
+        .attr("height", 30)
         .attr("width", (d, i, j) => { return percentScale(d.values) + "%" })
         .attr("y", 0)
         .attr("x", (d, i, j) => { return percentScale(d.cumsum) + "%" });
