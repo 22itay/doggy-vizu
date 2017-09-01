@@ -1,7 +1,7 @@
 var w = 800;
 var h = 600;
 
-var keyc = true, keys = true, keyt = true, keyr = true, keyx = true, keyd = true, keyl = true, keym = true, keyh = true, key1 = true, key2 = true, key3 = true, key0 = true
+var showCh = true, showFa = true, keyt = true, showMo = true, keyx = true, keyd = true, keyl = true, keym = true, keyh = true, key1 = true, key2 = true, key3 = true, key0 = true
 
 var focus_node = null, highlight_node = null;
 
@@ -46,9 +46,19 @@ svg.style("cursor", "move");
 
 
 var colorfunctions={"passed":function (d){
+	let tfScaleData = { "true": "#3366cc", "false": "#dc3912" };
 
 	},"breed":function (d){
-
+		let breedScale = {
+			"": "#1f77b4",
+			"BLB": "#ff7f0e",
+			"BLB*GRT": "#2ca02c",
+			"GRT": "#d62728",
+			"GSD": "#9467bd",
+			"LAB": "#8c564b",
+			"LAB*GRT": "#e377c2",
+			"OTHER": "#7f7f7f"
+		};
 	},"heatmap":function (d){
 		return default_node_color;
 	},"norm":function (d) {
@@ -61,8 +71,19 @@ var colorfunctions={"passed":function (d){
 function change_famtree_colors(colorfunction){
 	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["heatmap"]
 }
-function toggle_famtree(toggle){
+function toggle_famtree(toggle,value){
+	switch(toggle) {
+		case "mothers":
 
+			break;
+		case "fathers":
+
+			break;
+		case "orphans":
+
+			break;
+		default:
+	}
 }
 
 var currentcolorFn=colorfunctions["norm"];
@@ -291,10 +312,10 @@ window.addEventListener("dogDataLoaded", function () {
 		if (d3.event.keyCode == 32) { force.stop(); }
 		else if (d3.event.keyCode >= 48 && d3.event.keyCode <= 90 && !d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey) {
 			switch (String.fromCharCode(d3.event.keyCode)) {
-				case "C": keyc = !keyc; break;
-				case "S": keys = !keys; break;
+				case "C": showCh = !showCh; break;
+				case "S": showFa = !showFa; break;
 				case "T": keyt = !keyt; break;
-				case "R": keyr = !keyr; break;
+				case "R": showMo = !showMo; break;
 				case "X": keyx = !keyx; break;
 				case "D": keyd = !keyd; break;
 				case "L": keyl = !keyl; break;
@@ -333,12 +354,9 @@ window.addEventListener("dogDataLoaded", function () {
 
 function vis_by_type(type) {
 	switch (type) {
-		case "circle": return keyc;
-		case "square": return keys;
-		case "triangle-up": return keyt;
-		case "diamond": return keyr;
-		case "cross": return keyx;
-		case "triangle-down": return keyd;
+		case "circle": return showCh;
+		case "square": return showFa;
+		case "diamond": return showMo;
 		default: return true;
 	}
 }
