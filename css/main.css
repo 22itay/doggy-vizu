@@ -30,22 +30,27 @@ body {
     margin: auto;
 }
 
-.node{
-    cursor: pointer;
-    fill: #ccc;
-    stroke: #ffffff;
-    stroke-width: 2px;
+.node {
+    fill: #fff;
+    stroke: steelblue;
+    stroke-width: 1.5px;
 }
-
-.link{
+.node {
+    font: 10px sans-serif;
+}
+.link {
     fill: none;
-    stroke: #539552;
-    stroke-width: 2px;
-
+    stroke: #ff8888;
+    stroke-width: 1.5px;
 }
 
 .node.fixed {
     fill: #f00;
+  }
+
+  #vis3 text {
+    font-family: sans-serif;
+    pointer-events: none;
   }
 
   .axis text {
