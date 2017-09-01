@@ -80,10 +80,11 @@ function toggle_famtree(toggle,value){
 }
 
 var currentcolorFn=colorfunctions["norm"];
-
+var link,node,text;
+var linkedByIndex = {};
 window.addEventListener("dogDataLoaded", function () {
 	console.log(graph);
-	var linkedByIndex = {};
+	
 	graph.links.forEach(function (d) {
 		linkedByIndex[d.source + "," + d.target] = true;
 	});
@@ -105,7 +106,7 @@ window.addEventListener("dogDataLoaded", function () {
 		.links(graph.links)
 		.start();
 
-	var link = g.selectAll(".link")
+	 link = g.selectAll(".link")
 		.data(graph.links)
 		.enter().append("line")
 		.attr("class", "link")
@@ -116,7 +117,7 @@ window.addEventListener("dogDataLoaded", function () {
 		})
 
 
-	var node = g.selectAll(".node")
+	 node = g.selectAll(".node")
 		.data(graph.nodes)
 		.enter().append("g")
 		.attr("class", "node")
@@ -142,9 +143,7 @@ window.addEventListener("dogDataLoaded", function () {
 	}
 
 	var circle = node.append("path")
-
-
-		.attr("d", d3.svg.symbol()
+			.attr("d", d3.svg.symbol()
 			.size(function (d) { return Math.PI * Math.pow(size(d.size) || nominal_base_node_size, 2); })
 			.type(function (d) { return d.type; }))
 
@@ -154,7 +153,7 @@ window.addEventListener("dogDataLoaded", function () {
 		.style(towhite, "white");
 
 
-	var text = g.selectAll(".text")
+	 text = g.selectAll(".text")
 		.data(graph.nodes)
 		.enter().append("text")
 		.attr("dy", ".35em")
@@ -320,31 +319,29 @@ window.addEventListener("dogDataLoaded", function () {
 		}
 	}
 
-	function update_famtree_view(){
-		link.style("display", function (d) {
-			var flag = vis_by_type(d.source.type) && vis_by_type(d.target.type) && vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
-			linkedByIndex[d.source.index + "," + d.target.index] = flag;
-			return flag ? "inline" : "none";
-		});
-		node.style("display", function (d) {
-			return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
-		});
-		text.style("display", function (d) {
-			return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
-		});
-	
-		if (highlight_node !== null) {
-			if ((key0 || hasConnections(highlight_node)) && vis_by_type(highlight_node.type) && vis_by_node_score(highlight_node.score)) {
-				if (focus_node !== null) set_focus(focus_node);
-				set_highlight(highlight_node);
-			}
-			else { exit_highlight(); }
-		}
-	}
-
-
 });
 
+function update_famtree_view(){
+	link.style("display", function (d) {
+		var flag = vis_by_type(d.source.type) && vis_by_type(d.target.type) && vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
+		linkedByIndex[d.source.index + "," + d.target.index] = flag;
+		return flag ? "inline" : "none";
+	});
+	node.style("display", function (d) {
+		return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
+	});
+	text.style("display", function (d) {
+		return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
+	});
+
+	if (highlight_node !== null) {
+		if ((key0 || hasConnections(highlight_node)) && vis_by_type(highlight_node.type) && vis_by_node_score(highlight_node.score)) {
+			if (focus_node !== null) set_focus(focus_node);
+			set_highlight(highlight_node);
+		}
+		else { exit_highlight(); }
+	}
+}
 
 
 function vis_by_type(type) {
