@@ -44,7 +44,7 @@ function analyzeDogs(err, data) {
             "passed": dogEntry.Passed,
             "type": "circle",
             "size": 35,
-            "score": 5,
+            "score": 7,
             "name": dogEntry["Name (English)"] + " [" + dogEntry.ID + "]"
         });
     });
@@ -61,7 +61,7 @@ function analyzeDogs(err, data) {
                     "gender": "Male",
                     "passed": true,
                     "size": 20,
-                    "score": 5,
+                    "score": 2,
                     "name": `Father ${father_id}`
                 });
             } else {
@@ -77,7 +77,7 @@ function analyzeDogs(err, data) {
                     "gender": "Female",
                     "passed": true,
                     "size": 20,
-                    "score": 5,
+                    "score": 4,
                     "name": `Mother [${father_id}]`
                 });
             } else {

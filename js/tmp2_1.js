@@ -9,7 +9,7 @@ var text_center = false;
 var outline = false;
 
 var min_score = 0;
-var max_score = 1;
+var max_score = 10;
 
 var color = d3.scale.linear()
 	.domain([min_score, (min_score + max_score) / 2, max_score])
@@ -61,7 +61,11 @@ var colorfunctions={"passed":function (d){
 function change_famtree_colors(colorfunction){
 	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["heatmap"]
 }
-var currentcolorFn=colorfunctions["heatmap"];
+function toggle_famtree(toggle){
+
+}
+
+var currentcolorFn=colorfunctions["norm"];
 
 window.addEventListener("dogDataLoaded", function () {
 	console.log(graph);
