@@ -37,6 +37,11 @@ function visualizeTests(opts) {
     let barsShift = opts.useLabels ? 30 : 0;
     let barsHeight = stepSize;
 
+    // update percentScale
+    let maxValue = d3.max(loadedData["subtests_summed_scores"], d => d.values.reduce((sum, x) => sum + x.values, 0));
+    percentScale.domain([0, maxValue]);
+    percentScale.range([0, 100]);
+
     // TODO: more sophisticated filtering
     let data = [];
     switch (opts.display) {
@@ -89,9 +94,9 @@ function visualizeTests(opts) {
         }).enter()
         .append("rect")
         .attr("height", 30)
-        .attr("width", (d, i, j) => { return percentScale(d.values) + "%" })
+        .attr("width", (d, i, j) => { return globalPercentScale(d.values) + "%" })
         .attr("y", 0)
-        .attr("x", (d, i, j) => { return percentScale(d.cumsum) + "%" });
+        .attr("x", (d, i, j) => { return globalPercentScale(d.cumsum) + "%" });
 
     // color using the options
     switch (opts.display) {
@@ -226,8 +231,8 @@ let visualWidth = () => $(".custom-tabs").innerWidth() - 6 * 12;
 // event listeners
 window.addEventListener("testDataLoaded", function () {
     let maxValue = d3.max(loadedData["subtests_summed_scores"], d => d.values.reduce((sum, x) => sum + x.values, 0));
-    percentScale.domain([0, maxValue]);
-    percentScale.range([0, 100]);
+    globalPercentScale.domain([0, maxValue]);
+    globalPercentScale.range([0, 100]);
 });
 
 /// TOOLTIP
@@ -243,6 +248,7 @@ let tooltip = d3.select("body")
 
 // Scales
 let percentScale = d3.scale.linear();
+let globalPercentScale = d3.scale.linear();
 let linearColorScale = d3.scale.linear()
     .domain([0, 50, 100])
     .range(["#f9cdac", "#a73b8f", "#2d0f41"])

@@ -42,10 +42,29 @@ $("#parsets-toggles input").click(function (event) {
 
 // Tests interactions
 let form = document.forms['tests-sidebar'];
+let formerValues = { male: true, female: true };
 let changeFunc = function (e) {
     opts.filter = form.elements['filter'].value;
     opts.useLabels = form.elements['use_labels'].checked;
     opts.display = form.elements['display'].value;
+
+    filters = [];
+
+    // male-female filter
+    let show_male = form.elements['gender-check-male'].checked;
+    let show_female = form.elements['gender-check-female'].checked;
+    if (!show_female || !show_male) {
+        let gender_values = [];
+        if (show_male) gender_values.push("Male");
+        if (show_female) gender_values.push("Female");
+        filters.push({ key: "Gender", values: gender_values });
+    }
+    formerValues["male"] = show_male;
+    formerValues["female"] = show_female;
+
+    // refilter data if needed
+    filterSummarizeData(filters);
+
     visualizeTests(opts);
     visualizeTestsScale(opts);
 }

@@ -115,7 +115,7 @@
                             </header>
                             <!-- search_box -->
                             <div class="form-input">
-                                <input type="search" class="form-control" placeholder="Filter sub-tests here" name="filter">
+                                <input type="search" class="form-control" placeholder="Search for a sub-test" name="filter">
                             </div>
                             <!-- /search_box -->
 
@@ -134,9 +134,25 @@
                                     <input type="radio" name="display" value="dist_percent" checked> Dist. (Percentage)
                                 </label>
                                 <label class="btn btn-outline-dark">
-                                    <input type="radio" name="display" value="dist_disqualification"> Disqualification</label>
+                                    <input type="radio" name="display" value="dist_disqualification"> Disqualification
+                                </label>
                             </div>
                             <!-- /view_toggle -->
+
+                            <!-- -->
+                            <div>
+                                <span class="filter-header">Gender</span>
+                                <ul class="list-group">
+                                    <li class="list-group-item form-check">
+                                        <label><input name="gender-check-male" type="checkbox" checked> Male</label>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <label><input name="gender-check-female" type="checkbox" checked> Female</label>
+                                    </li>
+                                </ul>
+
+                            </div>
+                            <!-- -->
                         </form>
                     </aside>
                 </div>

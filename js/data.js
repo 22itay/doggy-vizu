@@ -86,9 +86,6 @@ function analyzeDogs(err, data) {
         }
     });
 
-    console.log(graph);
-    //loadedData["dogsT"] = graph;
-
     window.dispatchEvent(dogDataLoaded);
 }
 
