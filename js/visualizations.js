@@ -33,9 +33,9 @@ function buildParsets(categories) {
 
 function visualizeTests(opts) {
     // visual options
-    let stepSize = opts.useLabels ? 70 : 30;
+    let stepSize = 35;
     let barsShift = opts.useLabels ? 30 : 0;
-    let barsHeight = opts.useLabels ? 70 : 30;
+    let barsHeight = 30;
 
     // TODO: more sophisticated filtering
     let data = [];
@@ -65,16 +65,19 @@ function visualizeTests(opts) {
     // Adds labels
     if (opts.useLabels) {
         let labels = gs.append("text")
-            .attr("x", "0")
+            .attr("x", "100%")
+            .attr("text-anchor", "end")
             .attr("y", "20")
             .text(function (d) {
                 return `${d.info.Description}`
             });
-
     }
 
     // Adds stacked bar charts
-    let stackedBars = gs.selectAll("g")
+    let stackedBars = gs
+        .append("svg")
+        .attr("width", opts.useLabels ? "65%" : "100%")
+        .selectAll("g")
         .data((d, i) => {
             let sum = 0;
             return d.values.map(k => {
@@ -85,9 +88,9 @@ function visualizeTests(opts) {
             });
         }).enter()
         .append("rect")
-        .attr("height", 30)
+        .attr("height", barsHeight)
         .attr("width", (d, i, j) => { return percentScale(d.values) + "%" })
-        .attr("y", barsShift)
+        .attr("y", 0)
         .attr("x", (d, i, j) => { return percentScale(d.cumsum) + "%" });
 
     // color using the options
