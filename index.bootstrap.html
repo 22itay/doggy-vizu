@@ -91,32 +91,36 @@
 
                     <aside class="col-3 sidebar">
                         <header>
+                            Legend
+                        </header>
+
+                        <header>
                             Filters
                         </header>
-                        <form name="famtree-controls">
+                        <form name="famtree-controls" id="famtree-controls">
                             <span class="filter-header">Display</span>
                             <div class="list-group">
                                 <label class="list-group-item">
-                                    <input type="radio" name="display" value="heatmap" checked> Heatmap
+                                    <input type="radio" name="famtree_display" value="heatmap" checked> Heatmap
                                 </label>
                                 <label class="list-group-item">
-                                    <input type="radio" name="display" value="breed"> Breed & Color Code
+                                    <input type="radio" name="famtree_display" value="breed"> Breed & Color Code
                                 </label>
                                 <label class="list-group-item">
-                                    <input type="radio" name="display" value="breed"> Passed/Not Passed
+                                    <input type="radio" name="famtree_display" value="passed"> Passed/Not Passed
                                 </label>
                             </div>
 
                             <span class="filter-header">Show</span>
                             <div class="list-group">
                                 <label class="list-group-item">
-                                    <input type="checkbox" name="display" value="heatmap"> Mothers
+                                    <input type="checkbox" name="famtree_show_mothers" value="heatmap" checked> Mothers
                                 </label>
                                 <label class="list-group-item">
-                                    <input type="checkbox" name="display" value="dist_cat"> Fathers
+                                    <input type="checkbox" name="famtree_show_fathers" value="dist_cat" checked> Fathers
                                 </label>
                                 <label class="list-group-item">
-                                    <input type="checkbox" name="display" value="dist_cat"> Orphans
+                                    <input type="checkbox" name="famtree_show_orphans" value="dist_cat" checked> Orphans
                                 </label>
                             </div>
                         </form>
@@ -134,7 +138,7 @@
                     <aside class="col-3 sidebar">
                         <form id="tests-sidebar" name="tests-sidebar">
                             <header>
-                                Scale
+                                Legend
                             </header>
 
                             <div id="vis-tests-legend" class="w-100 mt-2"></div>

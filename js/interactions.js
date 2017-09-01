@@ -44,10 +44,12 @@ $("#parsets-toggles input").click(function (event) {
 let form = document.forms['tests-sidebar'];
 let formerValues = { male: true, female: true };
 let changeFunc = function (e) {
+    // compile options
     opts.filter = form.elements['filter'].value;
     opts.useLabels = form.elements['use_labels'].checked;
     opts.display = form.elements['display'].value;
 
+    // prepare for filters
     filters = [];
 
     // male-female filter
@@ -65,7 +67,25 @@ let changeFunc = function (e) {
     // refilter data if needed
     filterSummarizeData(filters);
 
+    // reload visualizations
     visualizeTests(opts);
     visualizeTestsScale(opts);
 }
 $('#tests-sidebar').on('keyup change', ':input', changeFunc);
+
+let famtreeForm = document.forms["famtree-controls"];
+$('#famtree-controls').on('keyup change', ':input', function () {
+    // toggle controls
+    console.log(famtreeForm.elements['famtree_display'].value);
+    //change_famtree_colors(famtreeForm.elements['famtree_display'].value)
+
+    // TODO: change scale according to the display mode
+
+    // toggle views
+    console.log(famtreeForm.elements['famtree_show_mothers'].checked);
+    console.log(famtreeForm.elements['famtree_show_fathers'].checked);
+    console.log(famtreeForm.elements['famtree_show_orphans'].checked);
+    //toggle_famtree("mothers", famtreeForm.elements['famtree_show_mothers'].checked)
+    //toggle_famtree("fathers", famtreeForm.elements['famtree_show_fathers'].checked)
+    //toggle_famtree("orphans", famtreeForm.elements['famtree_show_orphans'].checked)
+});
