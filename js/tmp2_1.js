@@ -23,8 +23,9 @@ var size = d3.scale.pow().exponent(1)
 	.range([8, 24]);
 
 var force = d3.layout.force()
-	.linkDistance(60)
-	.charge(-300)
+	.linkDistance(80)
+	.charge(-600)
+	.gravity(.4)
 	.size([w, h]);
 
 var default_node_color = "#ccc";
@@ -42,6 +43,25 @@ var svg = d3.select("#vis-famtree").append("svg");
 var zoom = d3.behavior.zoom().scaleExtent([min_zoom, max_zoom])
 var g = svg.append("g");
 svg.style("cursor", "move");
+
+
+var colorfunctions={"passed":function (d){
+
+	},"breed":function (d){
+
+	},"heatmap":function (d){
+		return default_node_color;
+	},"norm":function (d) {
+		if (isNumber(d.score) && d.score >= 0)
+			 return color(d.score);
+		else
+			 return default_node_color;
+	}
+};
+function change_famtree_colors(colorfunction){
+	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["heatmap"]
+}
+var currentcolorFn=colorfunctions["heatmap"];
 
 window.addEventListener("dogDataLoaded", function () {
 	console.log(graph);
@@ -106,8 +126,6 @@ window.addEventListener("dogDataLoaded", function () {
 		towhite = "fill"
 	}
 
-
-
 	var circle = node.append("path")
 
 
@@ -115,10 +133,7 @@ window.addEventListener("dogDataLoaded", function () {
 			.size(function (d) { return Math.PI * Math.pow(size(d.size) || nominal_base_node_size, 2); })
 			.type(function (d) { return d.type; }))
 
-		.style(tocolor, function (d) {
-			if (isNumber(d.score) && d.score >= 0) return color(d.score);
-			else return default_node_color;
-		})
+		.style(tocolor,currentcolorFn)
 		//.attr("r", function(d) { return size(d.size)||nominal_base_node_size; })
 		.style("stroke-width", nominal_stroke)
 		.style(towhite, "white");

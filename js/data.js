@@ -42,7 +42,7 @@ function analyzeDogs(err, data) {
             "breed": dogEntry["Breed & Color Code"],
             "passed": dogEntry.Passed,
             "type": "circle",
-            "size": 20,
+            "size": 35,
             "score": 5,
             "name": dogEntry["Name (English)"] + " [" + dogEntry.ID + "]"
         });
