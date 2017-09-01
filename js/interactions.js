@@ -1,4 +1,5 @@
 let parsetsLabels = new Set(["Passed", "Breed & Color Code", "Gender"]);
+let opts = { filter: "", useLabels: true, display: "dist_percent" };
 
 // Event Listeners
 window.addEventListener("dogDataLoaded", function () {
@@ -6,15 +7,15 @@ window.addEventListener("dogDataLoaded", function () {
 });
 
 window.addEventListener("testDataLoaded", function () {
-    visualizeTests();
-    visualizeTestsScale();
-});
+    visualizeTests(opts);
+    visualizeTestsScale(opts);
+})
 
 window.addEventListener("resize", function () {
     if (window.dataLoaded) {
         buildParsets(parsetsLabels);
-        visualizeTests();
-        visualizeTestsScale();
+        visualizeTests(opts);
+        visualizeTestsScale(opts);
     }
 })
 
@@ -39,13 +40,13 @@ $("#parsets-toggles input").click(function (event) {
     buildParsets(parsetsLabels);
 })
 
-// Tests Interactions
-//document.getElementById("tests-searchbox").addEventListener("input", function (e) {
-//visualizeTests(e.target.value);
-//})
-let opts = {};
-$('#tests-sidebar').on('keyup change', ':input', function (e) {
-    let optionsData = $("#tests-sidebar").serializeArray();
-    optionsData.forEach(d => opts[d.name] = d.value)
+// Tests interactions
+let form = document.forms['tests-sidebar'];
+let changeFunc = function (e) {
+    opts.filter = form.elements['filter'].value;
+    opts.useLabels = form.elements['use_labels'].checked;
+    opts.display = form.elements['display'].value;
     visualizeTests(opts);
-});
+    visualizeTestsScale(opts);
+}
+$('#tests-sidebar').on('keyup change', ':input', changeFunc);
