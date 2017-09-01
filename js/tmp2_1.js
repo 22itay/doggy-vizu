@@ -59,7 +59,8 @@ var colorfunctions={"passed":function (d){
 	}
 };
 function change_famtree_colors(colorfunction){
-	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["heatmap"]
+	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["norm"];
+	update_famtree_view();
 }
 function toggle_famtree(toggle,value){
 	switch(toggle) {
@@ -73,7 +74,9 @@ function toggle_famtree(toggle,value){
 			showCh=value;
 			break;
 		default:
+		return;
 	}
+	update_famtree_view();
 }
 
 var currentcolorFn=colorfunctions["norm"];
@@ -130,9 +133,6 @@ window.addEventListener("dogDataLoaded", function () {
 
 
 	});
-
-
-
 
 	var tocolor = "fill";
 	var towhite = "stroke";
@@ -316,31 +316,33 @@ window.addEventListener("dogDataLoaded", function () {
 				case "3": key3 = !key3; break;
 				case "0": key0 = !key0; break;
 			}
-
-			link.style("display", function (d) {
-				var flag = vis_by_type(d.source.type) && vis_by_type(d.target.type) && vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
-				linkedByIndex[d.source.index + "," + d.target.index] = flag;
-				return flag ? "inline" : "none";
-			});
-			node.style("display", function (d) {
-				return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
-			});
-			text.style("display", function (d) {
-				return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
-			});
-
-			if (highlight_node !== null) {
-				if ((key0 || hasConnections(highlight_node)) && vis_by_type(highlight_node.type) && vis_by_node_score(highlight_node.score)) {
-					if (focus_node !== null) set_focus(focus_node);
-					set_highlight(highlight_node);
-				}
-				else { exit_highlight(); }
-			}
-
+			update_famtree_view()
 		}
 	}
 
 });
+
+function update_famtree_view(){
+	link.style("display", function (d) {
+		var flag = vis_by_type(d.source.type) && vis_by_type(d.target.type) && vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
+		linkedByIndex[d.source.index + "," + d.target.index] = flag;
+		return flag ? "inline" : "none";
+	});
+	node.style("display", function (d) {
+		return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
+	});
+	text.style("display", function (d) {
+		return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
+	});
+
+	if (highlight_node !== null) {
+		if ((key0 || hasConnections(highlight_node)) && vis_by_type(highlight_node.type) && vis_by_node_score(highlight_node.score)) {
+			if (focus_node !== null) set_focus(focus_node);
+			set_highlight(highlight_node);
+		}
+		else { exit_highlight(); }
+	}
+}
 
 function vis_by_type(type) {
 	switch (type) {
