@@ -54,9 +54,9 @@ function analyzeDogs(err, data) {
         let father_id = dogEntry.FatherID || 0;
         let mother_id = dogEntry.MotherID || 0;
 
-        let father = { "id": father_id,"type":"circle","size": 20,"score": 5,"name":"lala" };
-        let mother = { "id": mother_id,"type":"circle","size": 20,"score": 5,"name":"lala" };
-        let me ={ "id": dogEntry.ID||0,"type":"circle","size": 20,"score": 5,"name":"lala" };
+        let father = { "id": father_id,"type":"square","size": 20,"score": 5,"name":"F" };
+        let mother = { "id": mother_id,"type":"circle","size": 20,"score": 5,"name":"M" };
+        let me ={ "id": dogEntry.ID||0,"type":"circle","size": 20,"score": 5,"name":"C" };
         graph.nodes.push(me)
         let meIndex=graph.nodes.length-1;
         let fatherIndex=graph.nodes.indexOf(father);
