@@ -35,6 +35,15 @@ function getSelectedBreeds() {
     }, [])
 }
 
+function reloadCurrentLegend() {
+    if (window.dataLoaded) {
+        if (currentTab === "famtree-tab")
+            visualizeTreeScale(famtreeCurrent);
+        else if (currentTab === "testmain-tab")
+            visualizeTestsScale(opts);
+    }
+}
+
 // Event Listeners
 let currentTab = "testmain-tab";
 window.addEventListener("dogDataLoaded", function () {
@@ -51,17 +60,12 @@ window.addEventListener("resize", function () {
     if (window.dataLoaded) {
         buildParsets(parsetsLabels);
         visualizeTests(opts);
-        visualizeTestsScale(opts);
-        visualizeTreeScale(famtreeCurrent);
+        reloadCurrentLegend();
     }
 })
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    if (window.dataLoaded) {
-        if (e.target.id === "famtree-tab")
-            visualizeTreeScale(famtreeCurrent);
-        else if (e.target.id === "testmain-tab")
-            visualizeTestsScale(opts);
-    }
+    currentTab = e.target.id;
+    reloadCurrentLegend();
 })
 
 // Parsets Interactions
