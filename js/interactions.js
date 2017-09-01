@@ -1,8 +1,43 @@
 let parsetsLabels = new Set(["Passed", "Breed & Color Code", "Gender"]);
 let opts = { filter: "", useLabels: true, display: "dist_percent" };
 
+// functions
+function buildBreedsView() {
+    let breedControls = d3.select("#test-side-breedfilter")
+        .selectAll("li")
+        .data(loadedData["dogBreeds"]);
+
+    let labels = breedControls.enter()
+        .append("li")
+        .attr("class", "list-group-item")
+        .append("label");
+
+    labels.append("input")
+        .attr("type", "checkbox")
+        .attr("name", "breed-check")
+        .attr("value", (d) => d)
+        .attr("checked", true);
+
+    labels
+        .append("span")
+        .text((d) => d === "" ? " (Undefined)" : "" + d);
+
+
+    breedCheckboxes = Array.from(document.forms['tests-sidebar'].elements["breed-check"]);
+    defaultBreeds = getSelectedBreeds();
+}
+
+function getSelectedBreeds() {
+    return breedCheckboxes.reduce(function (arr, elem) {
+        if (elem.checked)
+            arr.push(elem.value);
+        return arr;
+    }, [])
+}
+
 // Event Listeners
 window.addEventListener("dogDataLoaded", function () {
+    buildBreedsView();
     buildParsets(parsetsLabels);
 });
 
@@ -42,7 +77,7 @@ $("#parsets-toggles input").click(function (event) {
 
 // Tests interactions
 let form = document.forms['tests-sidebar'];
-let formerValues = { male: true, female: true };
+let breedCheckboxes, defaultBreeds;
 let changeFunc = function (e) {
     // compile options
     opts.filter = form.elements['filter'].value;
@@ -61,8 +96,10 @@ let changeFunc = function (e) {
         if (show_female) gender_values.push("Female");
         filters.push({ key: "Gender", values: gender_values });
     }
-    formerValues["male"] = show_male;
-    formerValues["female"] = show_female;
+
+    // breeds filter
+    if (JSON.stringify(defaultBreeds) !== JSON.stringify(getSelectedBreeds()))
+        filters.push({ key: "Breed & Color Code", values: getSelectedBreeds() });
 
     // refilter data if needed
     filterSummarizeData(filters);

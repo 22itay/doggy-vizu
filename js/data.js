@@ -17,6 +17,7 @@ function analyzeDogs(err, data) {
         dogs[dogEntry.ID] = dogEntry;
     });
 
+    loadedData["dogBreeds"] = Array.from(new Set(data.map(d => d["Breed & Color Code"]))).sort();
     loadedData["dogs"] = data;
     loadedData["dogsTable"] = dogs;
 
