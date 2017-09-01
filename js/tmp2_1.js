@@ -46,21 +46,11 @@ svg.style("cursor", "move");
 
 
 var colorfunctions={"passed":function (d){
-	let tfScaleData = { "true": "#3366cc", "false": "#dc3912" };
-
+	return trueFalseColorScale(d.passed);
 	},"breed":function (d){
-		let breedScale = {
-			"": "#1f77b4",
-			"BLB": "#ff7f0e",
-			"BLB*GRT": "#2ca02c",
-			"GRT": "#d62728",
-			"GSD": "#9467bd",
-			"LAB": "#8c564b",
-			"LAB*GRT": "#e377c2",
-			"OTHER": "#7f7f7f"
-		};
+		return breedColorScale(d.breed);
 	},"heatmap":function (d){
-		return default_node_color;
+		return plasmaScale(d.score);
 	},"norm":function (d) {
 		if (isNumber(d.score) && d.score >= 0)
 			 return color(d.score);
@@ -74,13 +64,13 @@ function change_famtree_colors(colorfunction){
 function toggle_famtree(toggle,value){
 	switch(toggle) {
 		case "mothers":
-
+			showMo=value;
 			break;
 		case "fathers":
-
+			showFa=value;
 			break;
-		case "orphans":
-
+		case "orphans"://TODO orphans AND NOT ALL ch
+			showCh=value;
 			break;
 		default:
 	}
