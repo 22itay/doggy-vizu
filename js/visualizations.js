@@ -29,7 +29,8 @@ function buildParsets(categories) {
                 d = d.parent;
             }
             return path.join(" → ") + "<br>" + comma(count) + " entries (" + percent(count / d.count) + ")";
-        });
+        })
+        .categoryTooltip((d) => `<strong>${d.name}</strong><br>${comma(d.count)} entries (${percent(d.count / d.dimension.count)})`);
 
     // remove old svg
     parsetsVis.selectAll("svg").remove();
