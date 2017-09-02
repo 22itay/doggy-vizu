@@ -21,16 +21,26 @@ function buildParsets(categories) {
         .dimensions(sorted)
         .width(width)
         .tooltip(function defaultTooltip(d) {
-            var count = d.count,
+            let count = d.count,
+                parCount = d.parent.count,
                 path = [];
             while (d.parent) {
-                console.log(d);
-                if (d.name) path.unshift("<strong>" + d.dimension + "</strong>: " + d.name);
+                if (d.name !== "") {
+                    path.unshift(d.name);
+                }
                 d = d.parent;
             }
-            return path.join(" → ") + "<br>" + comma(count) + " entries (" + percent(count / d.count) + ")";
+
+            let path_main = path.join(" → ");
+            path.pop();
+            let path_parent = path.join(" → ")
+            let percent_parent = percent(count / parCount);
+            let percent_total = percent(count / d.count);
+
+            return `${comma(count)} entries (<strong>${path_main}</strong>) <br><strong>${percent_parent}</strong> of <strong>${path_parent}</strong><br> <strong>${percent_total}</strong> of ${d.count} total entries`
+            //return path.join(" → ") + "<br>" + comma(count) + " entries (" + percent(count / parCount) + " of "+  +", ")";
         })
-        .categoryTooltip((d) => `<strong>${d.name}</strong><br>${comma(d.count)} entries (${percent(d.count / d.dimension.count)})`);
+        .categoryTooltip((d) => `<strong>${d.dimension.name}: ${d.name}</strong><br>${comma(d.count)} entries (${percent(d.count / d.dimension.count)})`);
 
     // remove old svg
     parsetsVis.selectAll("svg").remove();
@@ -223,7 +233,7 @@ function visualizeTestsScale(opts) {
                 .enter()
                 .append("g").attr("transform", (d) => `translate(${getTranX()},5)`);
             scale.append("rect").attr("height", 15).attr("width", 15).attr("fill", (d) => d[1]);
-            scale.append("text").attr("y", 12).attr("x", 20).text(d[0] === "true" ? "Not Disqualified" : "Disqualified");
+            scale.append("text").attr("y", 12).attr("x", 20).text(d => d[0] === "true" ? "Not Disq." : "Disqualified");
             break;
     }
 }
