@@ -136,4 +136,5 @@ $('#famtree-controls').on('keyup change', ':input', function () {
     toggle_famtree("mothers", famtreeForm.elements['famtree_show_mothers'].checked)
     toggle_famtree("fathers", famtreeForm.elements['famtree_show_fathers'].checked)
     toggle_famtree("orphans", famtreeForm.elements['famtree_show_orphans'].checked)
+    toggle_famtree("children", famtreeForm.elements['famtree_show_children'].checked)
 });
