@@ -74,7 +74,7 @@ function analyzeDogs(err, data) {
                     "color": 2,
                     "totalChildren": 1,
                     "totalPassed": 0,
-                    "name": formatDogName("Father", father_id)
+                    "name": formatDogName("", father_id)
                 });
             } else {
                 graph.nodes[indexInNodes[father_id]].type = "square";
@@ -96,7 +96,7 @@ function analyzeDogs(err, data) {
                     "color": 4,
                     "totalChildren": 1,
                     "totalPassed": 0,
-                    "name": formatDogName("Mother", mother_id)
+                    "name": formatDogName("", mother_id)
                 });
             } else {
                 graph.nodes[indexInNodes[mother_id]].type = "diamond";
