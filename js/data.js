@@ -43,7 +43,7 @@ function analyzeDogs(err, data) {
             "breed": dogEntry["Breed & Color Code"],
             "passed": dogEntry.Passed,
             "type": "circle",
-            "size": 35,
+            "size": 80,
             "color": 7,
             "score": 0,
             "totalChildren": -1,
@@ -63,7 +63,7 @@ function analyzeDogs(err, data) {
                     "type": "square",
                     "gender": "Male",
                     "passed": true,
-                    "size": 20,
+                    "size": 60,
                     "color": 2,
                     "totalChildren": 1,
                     "totalPassed": 0,
@@ -76,7 +76,7 @@ function analyzeDogs(err, data) {
             if (dogEntry.Passed) {
                 graph.nodes[indexInNodes[father_id]].totalPassed++;
             }
-            graph.links.push({ "source": indexInNodes[father_id], "target": indexInNodes[dogEntry.ID] })
+            graph.links.push({ "source": indexInNodes[father_id], "target": indexInNodes[dogEntry.ID],"ty":"father" })
         }
         if (mother_id != 0) {
             if (!indexInNodes[mother_id]) {
@@ -85,7 +85,7 @@ function analyzeDogs(err, data) {
                     "type": "diamond",
                     "gender": "Female",
                     "passed": true,
-                    "size": 20,
+                    "size": 60,
                     "color": 4,
                     "totalChildren": 1,
                     "totalPassed": 0,
@@ -98,7 +98,7 @@ function analyzeDogs(err, data) {
             if (dogEntry.Passed) {
                 graph.nodes[indexInNodes[mother_id]].totalPassed++;
             }
-            graph.links.push({ "source": indexInNodes[mother_id], "target": indexInNodes[dogEntry.ID] })
+            graph.links.push({ "source": indexInNodes[mother_id], "target": indexInNodes[dogEntry.ID],"ty":"mother" })
         }
     });
 

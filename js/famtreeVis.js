@@ -1,12 +1,10 @@
 var w = 800;
 var h = 600;
 
-var showCh = true, showFa = true, keyt = true, showMo = true, keyx = true, keyd = true, keyl = true, keym = true, keyh = true, key1 = true, key2 = true, key3 = true, key0 = true
-
+var showCh = true, showFa = true, showMo = true;
 var focus_node = null, highlight_node = null;
 
-var text_center = false;
-var outline = false;
+var text_center = true;//false;
 
 var min_score = 0;
 var max_score = 10;
@@ -29,7 +27,6 @@ var force = d3.layout.force()
 	.size([w, h]);
 
 var default_node_color = "#ccc";
-//var default_node_color = "rgb(3,190,100)";
 var default_link_color = "#888";
 var nominal_base_node_size = 8;
 var nominal_text_size = 10;
@@ -39,70 +36,19 @@ var max_stroke = 4.5;
 var max_base_node_size = 36;
 var min_zoom = 0.1;
 var max_zoom = 7;
-var svg = d3.select("#vis-famtree").append("svg");
-var zoom = d3.behavior.zoom().scaleExtent([min_zoom, max_zoom])
+var svg = d3.select("#vis-famtree").append("svg").style("cursor", "move");
+var zoom = d3.behavior.zoom().scaleExtent([min_zoom, max_zoom]);
 var g = svg.append("g");
-svg.style("cursor", "move");
 
-
-var colorfunctions = {
-	"passed": function (d) {
-		return trueFalseColorScale(d.passed);
-	}, "breed": function (d) {
-		return breedColorScale(d.breed);
-	}, "heatmap": function (d) {
-		return plasmaScale((256 * d.totalPassed / d.totalChildren) || 0);
-	}, "norm": function (d) {
-		if (isNumber(d.color) && d.color >= 0)
-			return color(d.color);
-		else
-			return default_node_color;
-	}
-};
-function change_famtree_colors(colorfunction) {
-	currentcolorFn = colorfunctions[colorfunction] || colorfunctions["heatmap"];
-	//update_famtree_view();
-	circle.style("fill", currentcolorFn);
-}
-function toggle_famtree(toggle, value) {
-	switch (toggle) {
-		case "mothers":
-			showMo = value;
-			break;
-		case "fathers":
-			showFa = value;
-			break;
-		case "orphans"://TODO orphans AND NOT ALL ch
-			showCh = value;
-			break;
-		default:
-			return;
-	}
-	update_famtree_view();
-}
-
-var currentcolorFn = colorfunctions["heatmap"];
 var link, node, text, circle;
 var linkedByIndex = {};
 window.addEventListener("dogDataLoaded", function () {
+
 	graph.links.forEach(function (d) {
 		linkedByIndex[d.source + "," + d.target] = true;
 	});
 
-	function isConnected(a, b) {
-		return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
-	}
-
-	function hasConnections(a) {
-		for (var property in linkedByIndex) {
-			s = property.split(",");
-			if ((s[0] == a.index || s[1] == a.index) && linkedByIndex[property]) return true;
-		}
-		return false;
-	}
-
-	force
-		.nodes(graph.nodes)
+	force.nodes(graph.nodes)
 		.links(graph.links)
 		.start();
 
@@ -111,7 +57,7 @@ window.addEventListener("dogDataLoaded", function () {
 		.enter().append("line")
 		.attr("class", "link")
 		.style("stroke-width", nominal_stroke)
-		.style("stroke", function (d) {
+		.style("stroke", function (d) {//todo
 			if (isNumber(d.score) && d.score >= 0) return color(d.score);
 			else return default_link_color;
 		})
@@ -132,22 +78,14 @@ window.addEventListener("dogDataLoaded", function () {
 		g.attr("transform", "translate(" + dcx + "," + dcy + ")scale(" + zoom.scale() + ")");
 	});
 
-	var tocolor = "fill";
-	var towhite = "stroke";
-	if (outline) {
-		tocolor = "stroke"
-		towhite = "fill"
-	}
-
 	circle = node.append("path")
 		.attr("d", d3.svg.symbol()
 			.size(function (d) { return Math.PI * Math.pow(size(d.size) || nominal_base_node_size, 2); })
 			.type(function (d) { return d.type; }))
 
-		.style(tocolor, currentcolorFn)
-		//.attr("r", function(d) { return size(d.size)||nominal_base_node_size; })
+		.style("fill", currentcolorFn)
 		.style("stroke-width", nominal_stroke)
-		.style(towhite, "white");
+		.style("stroke", "white");
 
 
 	text = g.selectAll(".text")
@@ -157,7 +95,7 @@ window.addEventListener("dogDataLoaded", function () {
 		.style("font-size", nominal_text_size + "px")
 
 	if (text_center)
-		text.text(function (d) { return d.id; })
+		text.text(function (d) { return d.name; })
 			.style("text-anchor", "middle");
 	else
 		text.attr("dx", function (d) { return (size(d.size) || nominal_base_node_size); })
@@ -192,56 +130,6 @@ window.addEventListener("dogDataLoaded", function () {
 			if (highlight_node === null) exit_highlight();
 		});
 
-	function exit_highlight() {
-		highlight_node = null;
-		if (focus_node === null) {
-			svg.style("cursor", "move");
-			if (highlight_color != "white") {
-				circle.style(towhite, "white");
-				text.style("font-weight", "normal");
-				link.style("stroke", function (o) { return (isNumber(o.score) && o.score >= 0) ? color(o.score) : default_link_color });
-			}
-
-		}
-	}
-
-	function set_focus(d) {
-		if (highlight_trans < 1) {
-			circle.style("opacity", function (o) {
-				return isConnected(d, o) ? 1 : highlight_trans;
-			});
-
-			text.style("opacity", function (o) {
-				return isConnected(d, o) ? 1 : highlight_trans;
-			});
-
-			link.style("opacity", function (o) {
-				return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
-			});
-		}
-	}
-
-
-	function set_highlight(d) {
-		svg.style("cursor", "pointer");
-		if (focus_node !== null) d = focus_node;
-		highlight_node = d;
-
-		if (highlight_color != "white") {
-			circle.style(towhite, function (o) {
-				return isConnected(d, o) ? highlight_color : "white";
-			});
-			text.style("font-weight", function (o) {
-				return isConnected(d, o) ? "bold" : "normal";
-			});
-			link.style("stroke", function (o) {
-				return o.source.index == d.index || o.target.index == d.index ? highlight_color : ((isNumber(o.score) && o.score >= 0) ? color(o.score) : default_link_color);
-
-			});
-		}
-	}
-
-
 	zoom.on("zoom", function () {
 
 		var stroke = nominal_stroke;
@@ -255,7 +143,6 @@ window.addEventListener("dogDataLoaded", function () {
 			.size(function (d) { return Math.PI * Math.pow(size(d.size) * base_radius / nominal_base_node_size || base_radius, 2); })
 			.type(function (d) { return d.type; }))
 
-		//circle.attr("r", function(d) { return (size(d.size)*base_radius/nominal_base_node_size||base_radius); })
 		if (!text_center) text.attr("dx", function (d) { return (size(d.size) * base_radius / nominal_base_node_size || base_radius); });
 
 		var text_size = nominal_text_size;
@@ -268,7 +155,6 @@ window.addEventListener("dogDataLoaded", function () {
 	svg.call(zoom);
 
 	resize();
-	//window.focus();
 	d3.select(window).on("resize", resize).on("keydown", keydown);
 
 	force.on("tick", function () {
@@ -284,24 +170,11 @@ window.addEventListener("dogDataLoaded", function () {
 		node.attr("cx", function (d) { return d.x; })
 			.attr("cy", function (d) { return d.y; });
 	});
-
-	function resize() {
-		var width = w, height = h;
-		svg.attr("width", width).attr("height", height);
-
-		force.size([force.size()[0] + (width - w) / zoom.scale(), force.size()[1] + (height - h) / zoom.scale()]).resume();
-		w = width;
-		h = height;
-	}
-
 	function keydown() {
 		if (d3.event.keyCode == 32) { force.stop(); }
 		else if (d3.event.keyCode >= 48 && d3.event.keyCode <= 90 && !d3.event.ctrlKey && !d3.event.altKey && !d3.event.metaKey) {
 			switch (String.fromCharCode(d3.event.keyCode)) {
-				case "C": showCh = !showCh; break;
-				case "S": showFa = !showFa; break;
 				case "T": keyt = !keyt; break;
-				case "R": showMo = !showMo; break;
 				case "X": keyx = !keyx; break;
 				case "D": keyd = !keyd; break;
 				case "L": keyl = !keyl; break;
@@ -316,7 +189,103 @@ window.addEventListener("dogDataLoaded", function () {
 		}
 	}
 
-});
+});//end 
+//function start
+	//filter_API start
+	var colorfunctions = {
+		"passed": function (d) {
+			return trueFalseColorScale(d.passed);
+		}, "breed": function (d) {
+			return breedColorScale(d.breed);
+		}, "heatmap": function (d) {
+			return plasmaScale((256 * d.totalPassed / d.totalChildren) || 0);
+		}, "norm": function (d) {
+			if (isNumber(d.color) && d.color >= 0)
+				return color(d.color);
+			else
+				return default_node_color;
+		}
+	};
+	function change_famtree_colors(colorfunction) {
+		currentcolorFn = colorfunctions[colorfunction] || colorfunctions["heatmap"];
+		//update_famtree_view();
+		circle.style("fill", currentcolorFn);
+	}
+	var currentcolorFn = colorfunctions["heatmap"];
+	function toggle_famtree(toggle, value) {
+		switch (toggle) {
+			case "mothers":
+				showMo = value;
+				break;
+			case "fathers":
+				showFa = value;
+				break;
+			case "orphans"://TODO orphans AND NOT ALL ch
+				showCh = value;
+				break;
+			default:
+				return;
+		}
+		update_famtree_view();
+	}
+	//filter_API end
+
+function resize() {
+	var width = w, height = h;
+	svg.attr("width", width).attr("height", height);
+
+	force.size([force.size()[0] + (width - w) / zoom.scale(), force.size()[1] + (height - h) / zoom.scale()]).resume();
+	w = width;
+	h = height;
+}
+
+function set_highlight(d) {
+	svg.style("cursor", "pointer");
+	if (focus_node !== null) d = focus_node;
+	highlight_node = d;
+
+	if (highlight_color != "white") {
+		circle.style("stroke", function (o) {
+			return isConnected(d, o) ? highlight_color : "white";
+		});
+		text.style("font-weight", function (o) {
+			return isConnected(d, o) ? "bold" : "normal";
+		});
+		link.style("stroke", function (o) {
+			return o.source.index == d.index || o.target.index == d.index ? highlight_color : ((isNumber(o.score) && o.score >= 0) ? color(o.score) : default_link_color);
+
+		});
+	}
+}
+
+function exit_highlight() {
+	highlight_node = null;
+	if (focus_node === null) {
+		svg.style("cursor", "move");
+		if (highlight_color != "white") {
+			circle.style("stroke", "white");
+			text.style("font-weight", "normal");
+			link.style("stroke", function (o) { return (isNumber(o.score) && o.score >= 0) ? color(o.score) : default_link_color });
+		}
+
+	}
+}
+
+function set_focus(d) {
+	if (highlight_trans < 1) {
+		circle.style("opacity", function (o) {
+			return isConnected(d, o) ? 1 : highlight_trans;
+		});
+
+		text.style("opacity", function (o) {
+			return isConnected(d, o) ? 1 : highlight_trans;
+		});
+
+		link.style("opacity", function (o) {
+			return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
+		});
+	}
+}
 
 function update_famtree_view() {
 	link.style("display", function (d) {
@@ -339,7 +308,17 @@ function update_famtree_view() {
 		else { exit_highlight(); }
 	}
 }
+function isConnected(a, b) {
+	return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
+}
 
+function hasConnections(a) {
+	for (var property in linkedByIndex) {
+		s = property.split(",");
+		if ((s[0] == a.index || s[1] == a.index) && linkedByIndex[property]) return true;
+	}
+	return false;
+}
 
 function vis_by_type(type) {
 	switch (type) {
@@ -370,3 +349,6 @@ function vis_by_link_score(score) {
 function isNumber(n) {
 	return !isNaN(parseFloat(n)) && isFinite(n);
 }	
+//function end
+
+var keyt = true, keyx = true, keyd = true, keyl = true, keym = true, keyh = true, key1 = true, key2 = true, key3 = true, key0 = true
