@@ -13,9 +13,23 @@ function stepper(step, start = 0) {
  */
 function buildParsets(categories) {
     // recreate chart
+    let comma = d3.format(",f");
+    let percent = d3.format("%");
     let width = visualWidth() * 9 / 12;
     let sorted = Array.from(categories).sort();
-    chart2 = d3.parsets().dimensions(sorted).width(width);
+    chart2 = d3.parsets()
+        .dimensions(sorted)
+        .width(width)
+        .tooltip(function defaultTooltip(d) {
+            var count = d.count,
+                path = [];
+            while (d.parent) {
+                console.log(d);
+                if (d.name) path.unshift("<strong>" + d.dimension + "</strong>: " + d.name);
+                d = d.parent;
+            }
+            return path.join(" → ") + "<br>" + comma(count) + " entries (" + percent(count / d.count) + ")";
+        });
 
     // remove old svg
     parsetsVis.selectAll("svg").remove();
@@ -41,7 +55,6 @@ function visualizeTests(opts) {
     percentScale.domain([0, maxValue]);
     percentScale.range([0, 100]);
 
-    // TODO: more sophisticated filtering
     let data = [];
     switch (opts.display) {
         case "dist_disqualification":

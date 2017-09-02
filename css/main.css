@@ -89,3 +89,7 @@ aside.sidebar .filter-header {
 .list-group label {
     margin-bottom: 0;
 }
+
+.parsets.tooltip {
+    opacity: initial;
+}
