@@ -330,7 +330,7 @@ window.addEventListener("testDataLoaded", function () {
 /// TOOLTIP
 let tooltip = d3.select("body")
     .append("div")
-    .style("background", "rgba(255,255,255,1)")
+    .style("background", "#fff")
     .style("border", "1px solid #000")
     .style("padding", "1rem")
     .style("position", "absolute")

@@ -92,4 +92,8 @@ aside.sidebar .filter-header {
 
 .parsets.tooltip {
     opacity: initial;
+    background: #fff;
+    border: solid 1px #000;
+    padding: 1rem;
+    font-size: 1rem;
 }
