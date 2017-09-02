@@ -95,7 +95,7 @@ window.addEventListener("dogDataLoaded", function () {
 		.style("font-size", nominal_text_size + "px")
 
 	if (text_center)
-		text.text(function (d) { return d.name; })
+		text.text(function (d) { return d.name+'\u000d'+d.id; })
 			.style("text-anchor", "middle");
 	else
 		text.attr("dx", function (d) { return (size(d.size) || nominal_base_node_size); })
