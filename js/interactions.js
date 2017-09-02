@@ -37,7 +37,7 @@ function getSelectedBreeds() {
 
 function reloadCurrentLegend() {
     if (window.dataLoaded) {
-        if (currentTab === "famtree-tab")
+        if (currentTab === "famrels-tab")
             visualizeTreeScale(famtreeCurrent);
         else if (currentTab === "testmain-tab")
             visualizeTestsScale(opts);
