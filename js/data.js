@@ -36,6 +36,13 @@ function analyzeDogs(err, data) {
         return index;
     }
 
+    function formatDogName(dname, did) {
+        if (dname === "" || !dname)
+            return "[" + did + "]";
+        else
+            return dname;
+    }
+
     data.forEach(function (dogEntry) {
         insertDogToGraph({
             "id": dogEntry.ID || 0,
@@ -48,7 +55,7 @@ function analyzeDogs(err, data) {
             "score": 0,
             "totalChildren": -1,
             "totalPassed": 0,
-            "name": dogEntry["Name (English)"] + " [" + dogEntry.ID + "]"
+            "name": formatDogName(dogEntry["Name (English)"], dogEntry.ID)
         });
     });
 
@@ -67,7 +74,7 @@ function analyzeDogs(err, data) {
                     "color": 2,
                     "totalChildren": 1,
                     "totalPassed": 0,
-                    "name": `Father [${father_id}]`
+                    "name": formatDogName("Father", father_id)
                 });
             } else {
                 graph.nodes[indexInNodes[father_id]].type = "square";
@@ -76,7 +83,7 @@ function analyzeDogs(err, data) {
             if (dogEntry.Passed) {
                 graph.nodes[indexInNodes[father_id]].totalPassed++;
             }
-            graph.links.push({ "source": indexInNodes[father_id], "target": indexInNodes[dogEntry.ID],"ty":"father" })
+            graph.links.push({ "source": indexInNodes[father_id], "target": indexInNodes[dogEntry.ID], "ty": "father" })
         }
         if (mother_id != 0) {
             if (!indexInNodes[mother_id]) {
@@ -89,7 +96,7 @@ function analyzeDogs(err, data) {
                     "color": 4,
                     "totalChildren": 1,
                     "totalPassed": 0,
-                    "name": `Mother [${father_id}]`
+                    "name": formatDogName("Mother", mother_id)
                 });
             } else {
                 graph.nodes[indexInNodes[mother_id]].type = "diamond";
@@ -98,7 +105,7 @@ function analyzeDogs(err, data) {
             if (dogEntry.Passed) {
                 graph.nodes[indexInNodes[mother_id]].totalPassed++;
             }
-            graph.links.push({ "source": indexInNodes[mother_id], "target": indexInNodes[dogEntry.ID],"ty":"mother" })
+            graph.links.push({ "source": indexInNodes[mother_id], "target": indexInNodes[dogEntry.ID], "ty": "mother" })
         }
     });
 
