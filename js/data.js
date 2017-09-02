@@ -67,7 +67,7 @@ function analyzeDogs(err, data) {
                     "color": 2,
                     "totalChildren": 1,
                     "totalPassed": 0,
-                    "name": `Father ${father_id}`
+                    "name": `Father [${father_id}]`
                 });
             } else {
                 graph.nodes[indexInNodes[father_id]].type = "square";

@@ -133,12 +133,7 @@ $('#famtree-controls').on('keyup change', ':input', function () {
     change_famtree_colors(famtreeForm.elements['famtree_display'].value)
 
     // toggle views
-    console.log(famtreeForm.elements['famtree_show_mothers'].checked);
-    console.log(famtreeForm.elements['famtree_show_fathers'].checked);
-    console.log(famtreeForm.elements['famtree_show_orphans'].checked);
     toggle_famtree("mothers", famtreeForm.elements['famtree_show_mothers'].checked)
     toggle_famtree("fathers", famtreeForm.elements['famtree_show_fathers'].checked)
     toggle_famtree("orphans", famtreeForm.elements['famtree_show_orphans'].checked)
-
-    // trigger update
 });

@@ -223,7 +223,7 @@ function visualizeTestsScale(opts) {
                 .enter()
                 .append("g").attr("transform", (d) => `translate(${getTranX()},5)`);
             scale.append("rect").attr("height", 15).attr("width", 15).attr("fill", (d) => d[1]);
-            scale.append("text").attr("y", 12).attr("x", 20).text((d) => d[0]);
+            scale.append("text").attr("y", 12).attr("x", 20).text(d[0] === "true" ? "Not Disqualified" : "Disqualified");
             break;
     }
 }
