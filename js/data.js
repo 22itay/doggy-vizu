@@ -45,9 +45,9 @@ function analyzeDogs(err, data) {
             "type": "circle",
             "size": 35,
             "color": 7,
-            "score":0,
-            "totalChildren":-1,
-            "totalPassed":0,
+            "score": 0,
+            "totalChildren": -1,
+            "totalPassed": 0,
             "name": dogEntry["Name (English)"] + " [" + dogEntry.ID + "]"
         });
     });
@@ -65,17 +65,16 @@ function analyzeDogs(err, data) {
                     "passed": true,
                     "size": 20,
                     "color": 2,
-                    "totalChildren":1,
-                    "totalPassed":0,
+                    "totalChildren": 1,
+                    "totalPassed": 0,
                     "name": `Father ${father_id}`
                 });
             } else {
                 graph.nodes[indexInNodes[father_id]].type = "square";
                 graph.nodes[indexInNodes[father_id]].totalChildren++;
             }
-            if(dogEntry.Passed){
+            if (dogEntry.Passed) {
                 graph.nodes[indexInNodes[father_id]].totalPassed++;
-                console.log("passed")
             }
             graph.links.push({ "source": indexInNodes[father_id], "target": indexInNodes[dogEntry.ID] })
         }
@@ -88,22 +87,21 @@ function analyzeDogs(err, data) {
                     "passed": true,
                     "size": 20,
                     "color": 4,
-                    "totalChildren":1,
-                    "totalPassed":0,
+                    "totalChildren": 1,
+                    "totalPassed": 0,
                     "name": `Mother [${father_id}]`
                 });
             } else {
                 graph.nodes[indexInNodes[mother_id]].type = "diamond";
                 graph.nodes[indexInNodes[mother_id]].totalChildren++;
             }
-            if(dogEntry.Passed){
+            if (dogEntry.Passed) {
                 graph.nodes[indexInNodes[mother_id]].totalPassed++;
-                console.log("passed")
             }
             graph.links.push({ "source": indexInNodes[mother_id], "target": indexInNodes[dogEntry.ID] })
         }
     });
-    
+
     window.dispatchEvent(dogDataLoaded);
 }
 
@@ -120,7 +118,7 @@ function analyzeTests(error, tests, subtests_descs, subtests_results) {
         resultEntry.TestID = +resultEntry.TestID;
         resultEntry.SubTestKind = +resultEntry.SubTestKind;
         resultEntry.Score = +resultEntry.Score;
-        resultEntry.Disqualified = +resultEntry.Disqualified === 1;
+        resultEntry.Disqualified = !(+resultEntry.Disqualified === 1);
     });
 
     subtests = {}
@@ -164,6 +162,7 @@ function filterSummarizeData(filters) {
     })
     summed_disqualifications.forEach(function (entry) {
         entry.info = loadedData["subtests"][entry.key];
+        entry.values = entry.values.sort((a, b) => a.key < b.key);
     })
 
     loadedData["subtests_summed_scores"] = summed_scores;

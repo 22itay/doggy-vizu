@@ -45,51 +45,46 @@ var g = svg.append("g");
 svg.style("cursor", "move");
 
 
-var colorfunctions={"passed":function (d){
-	return trueFalseColorScale(d.passed);
-	},"breed":function (d){
+var colorfunctions = {
+	"passed": function (d) {
+		return trueFalseColorScale(d.passed);
+	}, "breed": function (d) {
 		return breedColorScale(d.breed);
-	},"heatmap":function (d){
-		// console.log(d.totalPassed);
-		// console.log(d.totalChildren);
-		return plasmaScale((256 * d.totalPassed / d.totalChildren) ||0);
-	},"norm":function (d) {
+	}, "heatmap": function (d) {
+		return plasmaScale((256 * d.totalPassed / d.totalChildren) || 0);
+	}, "norm": function (d) {
 		if (isNumber(d.color) && d.color >= 0)
-			 return color(d.color);
+			return color(d.color);
 		else
-			 return default_node_color;
+			return default_node_color;
 	}
 };
-function change_famtree_colors(colorfunction){
-	console.log(colorfunction);
-	currentcolorFn=colorfunctions[colorfunction]||colorfunctions["heatmap"];
-	console.log(currentcolorFn);
+function change_famtree_colors(colorfunction) {
+	currentcolorFn = colorfunctions[colorfunction] || colorfunctions["heatmap"];
 	//update_famtree_view();
-	circle.style("fill",currentcolorFn);
+	circle.style("fill", currentcolorFn);
 }
-function toggle_famtree(toggle,value){
-	switch(toggle) {
+function toggle_famtree(toggle, value) {
+	switch (toggle) {
 		case "mothers":
-			showMo=value;
+			showMo = value;
 			break;
 		case "fathers":
-			showFa=value;
+			showFa = value;
 			break;
 		case "orphans"://TODO orphans AND NOT ALL ch
-			showCh=value;
+			showCh = value;
 			break;
 		default:
-		return;
+			return;
 	}
 	update_famtree_view();
 }
 
-var currentcolorFn=colorfunctions["heatmap"];
-var link,node,text,circle;
+var currentcolorFn = colorfunctions["heatmap"];
+var link, node, text, circle;
 var linkedByIndex = {};
 window.addEventListener("dogDataLoaded", function () {
-	console.log(graph);
-	
 	graph.links.forEach(function (d) {
 		linkedByIndex[d.source + "," + d.target] = true;
 	});
@@ -111,7 +106,7 @@ window.addEventListener("dogDataLoaded", function () {
 		.links(graph.links)
 		.start();
 
-	 link = g.selectAll(".link")
+	link = g.selectAll(".link")
 		.data(graph.links)
 		.enter().append("line")
 		.attr("class", "link")
@@ -122,7 +117,7 @@ window.addEventListener("dogDataLoaded", function () {
 		})
 
 
-	 node = g.selectAll(".node")
+	node = g.selectAll(".node")
 		.data(graph.nodes)
 		.enter().append("g")
 		.attr("class", "node")
@@ -144,18 +139,18 @@ window.addEventListener("dogDataLoaded", function () {
 		towhite = "fill"
 	}
 
-	 circle = node.append("path")
-			.attr("d", d3.svg.symbol()
+	circle = node.append("path")
+		.attr("d", d3.svg.symbol()
 			.size(function (d) { return Math.PI * Math.pow(size(d.size) || nominal_base_node_size, 2); })
 			.type(function (d) { return d.type; }))
 
-		.style(tocolor,currentcolorFn)
+		.style(tocolor, currentcolorFn)
 		//.attr("r", function(d) { return size(d.size)||nominal_base_node_size; })
 		.style("stroke-width", nominal_stroke)
 		.style(towhite, "white");
 
 
-	 text = g.selectAll(".text")
+	text = g.selectAll(".text")
 		.data(graph.nodes)
 		.enter().append("text")
 		.attr("dy", ".35em")
@@ -323,7 +318,7 @@ window.addEventListener("dogDataLoaded", function () {
 
 });
 
-function update_famtree_view(){
+function update_famtree_view() {
 	link.style("display", function (d) {
 		var flag = vis_by_type(d.source.type) && vis_by_type(d.target.type) && vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
 		linkedByIndex[d.source.index + "," + d.target.index] = flag;

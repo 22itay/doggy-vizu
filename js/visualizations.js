@@ -132,9 +132,9 @@ function visualizeTests(opts) {
         .on("mouseover", function (d) {
             tooltip
                 .html(`${!opts.useLabels ? "Test: " + d.info.Description + "<br>" : ""}` +
-                `Option: "${d.key}"<br>` +
-                `Tests: ${d.values} (${percentScale(d.values).toFixed(2)}%)<br>` +
-                `Culmulated: ${d.cumsum + d.values} (${percentScale(d.cumsum + d.values).toFixed(2)}%)`
+                `<strong>Option:</strong> "${d.key}"<br>` +
+                `<strong>Tests:</strong> ${d.values} (${percentScale(d.values).toFixed(2)}%)<br>` +
+                `<strong>Culmulated:</strong> ${d.cumsum + d.values} (${percentScale(d.cumsum + d.values).toFixed(2)}%)`
                 )
                 .style("visibility", "visible");
         })
