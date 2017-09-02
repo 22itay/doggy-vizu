@@ -21,9 +21,9 @@ var size = d3.scale.pow().exponent(1)
 	.range([8, 24]);
 
 var force = d3.layout.force()
-	.linkDistance(80)
-	.charge(-600)
-	.gravity(.4)
+	.linkDistance(100)
+	.charge(-800)
+	.gravity(.6)
 	.size([w, h]);
 
 var default_node_color = "#ccc";

@@ -196,10 +196,10 @@ let testDataLoaded = new Event("testDataLoaded");
 
 // data loading queue
 d3.queue()
-    .defer(d3.csv, "/data/dogs.csv")
+    .defer(d3.csv, "./data/dogs.csv")
     .await(analyzeDogs);
 d3.queue()
-    .defer(d3.csv, "/data/tests.csv")
-    .defer(d3.csv, "/data/subtest-desc.csv")
-    .defer(d3.csv, "/data/subtests.csv")
+    .defer(d3.csv, "./data/tests.csv")
+    .defer(d3.csv, "./data/subtest-desc.csv")
+    .defer(d3.csv, "./data/subtests.csv")
     .await(analyzeTests);
