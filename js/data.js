@@ -55,7 +55,8 @@ function analyzeDogs(err, data) {
             "score": 0,
             "totalChildren": -1,
             "totalPassed": 0,
-            "name": formatDogName(dogEntry["Name (English)"], dogEntry.ID)
+            "name": formatDogName(dogEntry["Name (English)"], dogEntry.ID),
+            "orphans": (dogEntry.FatherID || 0 + dogEntry.MotherID || 0)==0?true:false
         });
     });
 

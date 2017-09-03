@@ -1,7 +1,7 @@
 var w = 800;
 var h = 600;
 
-var showCh = true, showFa = true, showMo = true;
+var showCh = true,showOr =true, showFa = true, showMo = true;
 var focus_node = null, highlight_node = null;
 
 var text_center = true;//false;
@@ -220,8 +220,11 @@ window.addEventListener("dogDataLoaded", function () {
 			case "fathers":
 				showFa = value;
 				break;
-			case "orphans"://TODO orphans AND NOT ALL ch
+			case "children":
 				showCh = value;
+				break;
+			case "orphans":
+				showOr = value;
 				break;
 			default:
 				return;
@@ -289,19 +292,19 @@ function set_focus(d) {
 
 function update_famtree_view() {
 	link.style("display", function (d) {
-		var flag = vis_by_type(d.source.type) && vis_by_type(d.target.type) && vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
+		var flag = vis_by_type(d.source.type,d.target.orphans) && vis_by_type(d.target.type,d.target.orphans) && vis_by_node_score(d.source.score) && vis_by_node_score(d.target.score) && vis_by_link_score(d.score);
 		linkedByIndex[d.source.index + "," + d.target.index] = flag;
 		return flag ? "inline" : "none";
 	});
 	node.style("display", function (d) {
-		return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
+		return (key0 || hasConnections(d)) && vis_by_type(d.type,d.orphans) && vis_by_node_score(d.score) ? "inline" : "none";
 	});
 	text.style("display", function (d) {
-		return (key0 || hasConnections(d)) && vis_by_type(d.type) && vis_by_node_score(d.score) ? "inline" : "none";
+		return (key0 || hasConnections(d)) && vis_by_type(d.type,d.orphans) && vis_by_node_score(d.score) ? "inline" : "none";
 	});
 
 	if (highlight_node !== null) {
-		if ((key0 || hasConnections(highlight_node)) && vis_by_type(highlight_node.type) && vis_by_node_score(highlight_node.score)) {
+		if ((key0 || hasConnections(highlight_node)) && vis_by_type(highlight_node.type,highlight_node.orphans) && vis_by_node_score(highlight_node.score)) {
 			if (focus_node !== null) set_focus(focus_node);
 			set_highlight(highlight_node);
 		}
@@ -320,11 +323,11 @@ function hasConnections(a) {
 	return false;
 }
 
-function vis_by_type(type) {
+function vis_by_type(type,orphans) {
 	switch (type) {
-		case "circle": return showCh;
 		case "square": return showFa;
 		case "diamond": return showMo;
+		case "circle": return orphans?showOr:showCh;
 		default: return true;
 	}
 }
